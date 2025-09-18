@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { ChevronDown, ChevronUp, Home, LayoutDashboard, Menu } from 'lucide-react';
+import { ChevronDown, ChevronUp, LayoutDashboard, Menu } from 'lucide-react';
 import { Map as MapIcon2 } from 'lucide-react';
 import {
     Popover,
@@ -11,9 +11,6 @@ import { Button } from './ui/button';
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
 import ThemeSelector from './ThemeSelector';

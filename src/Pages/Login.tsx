@@ -11,12 +11,11 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [alertVisible, setAlertVisible] = useState(false);
     const { showAlert } = useAlert();
-    const TrackFyLogo = {
-        inverted: 'https://trackfyapp.com.br/images/logo/logo-cor-2.svg',
-        normal: 'https://trackfyapp.com.br/images/logo/logo-trackfy.svg'
-    }
+    // const TrackFyLogo = {
+    //     inverted: 'https://trackfyapp.com.br/images/logo/logo-cor-2.svg',
+    //     normal: 'https://trackfyapp.com.br/images/logo/logo-trackfy.svg'
+    // }
     // Fake login handler
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,7 +39,7 @@ const Login: React.FC = () => {
         document.title = "Login - TrackApp";
 
     }, []);
-    const { user, onMobile } = useGlobals();
+    const { user } = useGlobals();
     useEffect(() => {
         if (user) {
             // If a user is already logged in, redirect to home

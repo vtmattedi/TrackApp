@@ -1,6 +1,6 @@
-import React, { useEffect, useState, type JSX } from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
-import { Crosshair, LocateFixed, MapPin, Minus, PinIcon, Plus } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { LocateFixed, Minus, Plus } from 'lucide-react';
 import AnexoI from '../assets/AnexoI.json';
 import "./map.css" // darkmode for the zoom buttons
 import L from 'leaflet';
@@ -14,7 +14,7 @@ import {
     ChartTooltipContent,
     ChartLegend,
 } from "@/components/ui/chart"
-import { chartConfigPerArea, chartConfigPerDate, getDataPerArea } from '../assets/util/AttachedData';
+import { chartConfigPerDate, getDataPerArea } from '../assets/util/AttachedData';
 import {
     Select,
     SelectContent,
@@ -25,7 +25,6 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 const areaTypeColors = {
     Produtiva: {
@@ -190,13 +189,12 @@ const InnerMap: React.FC = () => {
             }
             {
                 locations.filter(loc => loc.tipo === areaFilter || areaFilter === 'All').map((loc, idx) => {
-                    let data = getDataPerArea().find(area => area.area === loc.nome)?.values || [];
+                    const data = getDataPerArea().find(area => area.area === loc.nome)?.values || [];
                     // Final Data for the most recent date
                     const chartData = [] as { name: string, value: number, fill: string }[];
                     let count = 0; // Helper to assign colors
                     //Extract keys from the last object in data array (most recent date)
-                    data ? Object.keys(data[data.length - 1]).forEach(key => {
-
+                    data && Object.keys(data[data.length - 1]).forEach(key => {
                         if (key !== 'date') {
                             count++;
                             chartData.push({
@@ -205,7 +203,7 @@ const InnerMap: React.FC = () => {
                                 fill: `var(--chart-${count})`,
                             });
                         }
-                    }) : undefined;
+                    }) ;
                     // Get the date and the time since the last update
                     const date = new Date(data[data.length - 1]?.date || '').toLocaleDateString('pt-BR', {
                         day: '2-digit',

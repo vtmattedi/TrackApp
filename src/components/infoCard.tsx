@@ -1,4 +1,3 @@
-import type { number } from 'motion/react';
 import React from 'react';
 import CountUp from './CountUp';
 import { Card } from './ui/card';

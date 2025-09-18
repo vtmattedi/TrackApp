@@ -1,13 +1,12 @@
 import React from 'react';
 import Chart, { type ChartData } from '../chart';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { useGlobals } from '@/Providers/globals';
 import { getDataPerDate, chartConfigPerDate, chartConfigPerArea } from '@/assets/util/AttachedData';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Calendar1, X, Squircle, ListFilter, Check, PieChart, TrendingUp, CircleSlash2 } from 'lucide-react';
+import { Calendar1, X, Squircle, ListFilter, Check, TrendingUp, CircleSlash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import CountUp from '@/components/CountUp';
 import { ChartPieDonutText } from '@/components/pieChart';
 import InfoCard from '@/components/infoCard';
 type FilterType = {
