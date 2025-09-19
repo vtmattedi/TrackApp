@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { TileLayer, useMap, Marker, Popup } from 'react-leaflet'
-import { LocateFixed, Minus, Plus } from 'lucide-react';
+import { LocateFixed, Minus, Plus, ShieldClose } from 'lucide-react';
 import AnexoI from '../assets/AnexoI.json';
 import "./map.css" // darkmode for the zoom buttons
 import L from 'leaflet';
 import { Label, Pie, PieChart } from "recharts"
 import mpGreen from '../assets/mp_green.svg';
 import mpBlue from '../assets/mp_blue.svg';
+import { useAlert } from '@/Providers/Alerts';
 import {
     ChartContainer,
     ChartLegendContent,
@@ -75,7 +76,7 @@ const InnerMap: React.FC = () => {
             map.off('zoomend');
         }
     }, [map]);
-
+    const { showAlert } = useAlert();
     return (
 
         <>
@@ -118,7 +119,10 @@ const InnerMap: React.FC = () => {
                             setCurrentPos([e.latlng.lat, e.latlng.lng]);
                             map.flyTo(e.latlng, map.getZoom());
                         }).on("locationerror", function (e) {
-                            alert("Não foi possível obter a localização. " + e.message);
+                            showAlert(
+                                <div className='flex items-center gap-2'><ShieldClose color='darkred' /> Não foi possível obter a localização.</div>,
+                                <div><strong>Erro {e.code}:</strong> {e.message}</div>
+                            );
                         });
                     }} className={zoomClass}
                         aria-label='Current Location'>
@@ -163,7 +167,7 @@ const InnerMap: React.FC = () => {
                         </SelectContent>
                     </Select>
                 </div>
-            </div>
+            </div >
 
             {
                 currentPos &&
@@ -201,7 +205,7 @@ const InnerMap: React.FC = () => {
                                 fill: `var(--chart-${count})`,
                             });
                         }
-                    }) ;
+                    });
                     // Get the date and the time since the last update
                     const date = new Date(data[data.length - 1]?.date || '').toLocaleDateString('pt-BR', {
                         day: '2-digit',
@@ -302,7 +306,8 @@ const InnerMap: React.FC = () => {
                             </Popup>
                         </Marker>
                     )
-                })}
+                })
+            }
         </>
 
     );
