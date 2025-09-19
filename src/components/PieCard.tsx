@@ -248,7 +248,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, periodSelected, ...props }) 
                             }}
                             nameKey="name"
                             onClick={(props) => {
-                                console.log("Clicked", props);
+                                // console.log("Clicked", props);
                                 const name = props?.name || "";
                                 if (selectedArea === "all" && availableAreas.includes(name)) {
                                     setSelectedArea(name);
