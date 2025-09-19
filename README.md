@@ -1,38 +1,11 @@
-Readme Struct
-
-Intro
-
- -App
-
- -How to Use it: req, installations
-
-Stack used
-
- -choices (tech)
-
- -design
-
-Improvments:
-
--SSR/SSG/CSR
-
-- Basics: radix, rquery, i18n
-- data: indexdb
-- ui: labels, aria
-- ux: click on label, skeleton
-
 
 <h1 align="center" style="font-weight: Bold">:desktop_computer: Projeto Track App </h1>
 
-Este Projeto é um aplicativo web para vizualição de dados 📈, neste caso estamos utilizando os dados em [Anexo](/src/assets)
+Este Projeto é um aplicativo web para visualização e análise de dados 📈, neste caso estamos utilizando os dados em [Anexo](/src/assets).
 
 * [Projeto](#projeto)
-* [Instalação](#instalando-o-aplicativo)
-* [Escolhas Tecnicas]
-* [Teste & Uso]
-* [Como configurar](#configurando-o-environment)
-* [Como executar](#executando-o-aplicativo)
-* [Testando](#testando-o-aplicativo)
+* [Instalação](#instalando--rodando-o-aplicativo)
+* [Escolhas Tecnicas](#escolhas-técnicas)
 * [Melhorias](#melhorias-futuras)
 
 Além disso, o projeto esta *live* e está disponível [aqui](https://track-app-gamma.vercel.app/).
@@ -42,9 +15,6 @@ Além disso, o projeto esta *live* e está disponível [aqui](https://track-app-
 Para utilizar esta aplicação é nescessario ter instalado:
 
 1. NodeJS e NPM (Testado nas Versões 22.12.0, 10.5.0 respectivamente) [vendor](https://nodejs.org/en/download).
-2. Acesso a um banco de dados PostgreSQL:
-   * Localmente: [vendor](https://www.postgresql.org/download).
-   * ou uma solução online como [neon](https://neon.com/).
 
 ### Instalando & Rodando o aplicativo.
 
@@ -62,7 +32,8 @@ git clone https://github.com/vtmattedi/TrackApp
     cd <folder>
 ```
 
->[!WARNING] Npm recentemente teve o chain-supply infectado, recomenda-se testar em ambiente controlado.
+>[!WARNING]
+>Npm recentemente teve o chain-supply infectado, recomenda-se mais ainda testar em ambiente controlado.
 
 3. Instale as dependencias:
 
@@ -74,243 +45,92 @@ git clone https://github.com/vtmattedi/TrackApp
 ```Bash
     npm run dev
 ```
-#### Configurando o Environment
 
-Para a aplicação funcionar corretamente, é nescessario criar o arquivo `.env` como o arquivo [exemplo](.example.env).
-
-Para o correto funcionamento é nescessario que os seguintes dados estejam presentes:
-
-* `JWT_SECRET`: String utilizar para gerar os tokens de acesso.
-* `JWT_REFRESH_SECRET`: String utilizar para gerar os *refresh* tokens.
-* `SCRYPT_SALT`: Salt para o hash das senhas (sugestão 128bits).
-* `PGHOST`: Enderço do PostgreSQL (padrão pós instalção numa maquina local: `::1`).
-* `PGDATABASE`: Nome do banco de dados (padrão pós instalção numa maquina local: `postgres`).
-* `PGUSER`: Usuário do banco de dados (padrão pós instalção numa maquina local:  `postgres`).
-* `PGPASSWORD`: Usuário do banco de dados (deve ter sido solicitado ao final da instalação).
-* `PGPORT`: A porta do banco de dados (padrão PostgreSQL: 5432)
-* `PGSSL`: `true` ou `false` determina se a conexão deve ser feita usando https.
-* `JWT_ACCESS_TOKEN_EXPIRES`: Tempo para que o token de acesso seja válidos. Deve ser no formato 'num''unit' então algo como '72h' ou '15m'. (Sugestão: 15m).
-* `JWT_REFRESH_TOKEN_EXPIRES`: Tempo para que o *refresh* token seja válido. Deve ser no formato 'num''unit' então algo como '72h' ou '15m'.(Sugestão: 72h).
-* `NODE_ENV`: `production` ou `development`. Em *development* alguma informações extra são expostas tais como motivo da falha do login.
-* `DONT_RECOVER_FROM_ERROR`: `false` ou `true`. Se for `true` erros *inesperados* encontrados durante a responsta não são tratados (são jogados novamente). Caso contrario, é jogado um erro http com codigo 500, capturado pelo NestJS.
-* `LOG_ROUTING_ERRORS` = `true` ou `false`. Imprime os erros capturados durante o roteamento.
-`
-Para gerar um Salt ou JWT secret pode ser utilizado:
-
+5. (opcional) Build do aplicativo:
 ```Bash
-node -p "require('crypto').randomBytes(128).toString('base64')"
+    npm run build
 ```
 
-```Bash
-node -p "require('crypto').randomBytes(64).toString('base64')"
-```
-
-Se utilizar o neon, este dados podem ser obtidos seguindo os seguintes passos:
-
-1. navegue até sua *dashboard*.
-2. clique no banco de dados desejado.
-3. selecione *overview* no painel de navegação à esquerda.
-4. clique em *Connect* e escolha *Parameters only*
-
-### Executando o aplicativo
-
-Após a instalação e a correta configuração do `.env` voce pode rodar o aplicativo:
-
-```Bash
-    npm run start
-```
-
-ou com o watcher:
-
-```Bash
-    npm run start:dev
-```
-
-### Testando o Aplicativo
-
-Uma vez que o aplicativo esteja executando, a documentação da API está disponivél em:
-
-* `http://localhost:3000` ou `http://localhost:3000/api` (Swagger)
-
-Para testar o aplicativo é nescessario algum aplicativo que posso enviar *Requests* com *body* e modificar os headers. Em geral o [insomnia](https://insomnia.rest/) ou [postman](https://www.postman.com/) são utiilizados mas tambem pode ser tulizado ferramentas como o curl.
-
-Além disso o [aquivo](/Insomnia/Insomnia_2025-05-04) do insomnia pode ser importado no insomnia, nele o usuário pode testar todos os *endpoints*.
-Este aquivo contém 1 documento no qual contém:
-
-* A spec da api (importada do Swagger)
-* 3 collections:
-  * Basic: todas as rotas individualmente.
-  * Misc: Rotas miscelâneas de uitlidade.
-  * Flow: Conjunto de *requests* com flows para testar utilização da aplicação.
-
-Para testar utilizando o insomnia:
-
-* Caso não esteja rodando no `localhost:3000`:
-  * Configure as variaveis de ambiente, a `base_url` deve conter a url da apricação rodado e a variavel `protocol` deve conter http ou https. Isso está pré configurado para localhost:3000
-  * Para a aplicação live, disponivel em: https://todoproject-6an2.onrender.com/:
-  * `base_url`: todoproject-6an2.onrender.com
-  * `porotcol`: https
-* Testar Request individuais na pasta *Basic* ou clicar com o botão direito em uma das pastas *Flow* e clicar em executar coleção.
-
-As requisições foram feitas de tal forma que usam das variavéis de ambiente para automaticamente configurar o `accessToken` e o `refreshToken` ao fazer um `login` ou `register`. Além disso ao criar uma tarefa, o ID dela também é configurado para as requisições de `edit` e `delete`.
-
-As requisições também tem testes do codigo de resultado e, em algum casos, dos dados recebidos.
-
-Sem o insomnia ou postman: uma vez que o aplicativo esteja executando, para testar precisamos primeiramente registrar ou fazer o login com um usuário.
-
-<details>
-<summary>Show</summary>
-
-* Criar conta:
-
-```Bash
-curl -X 'POST' \
-  'http://localhost:3000/auth/register' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "username": "john_doe",
-  "email": "name@provider.com",
-  "password": "password123"
-}'
-```
-
-ou
-
-* Login:
-
-```Bash
-curl -X 'POST' \
-  'http://localhost:3000/auth/login' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "name@provider.com",
-  "password": "password123"
-}'
-```
-
-</details>
-
-Disto receberemos dois tokens um `accessToken`e um `refreshToken` e precisamos utilizarlos para acessar o resto da aplicação.
-
-Para ver, editar, criar e deletar as tarefas, precisamos enviar na requisição, um *header* `authorization` com valor: `Bearer <acessToken>`.
-
-Caso a resposta tenha status 401 podemos enviar uma requisição contendo um *header* `authorization` com valor: `Bearer <refreshToken>`
-para `/auth/token` e receberemos um novo `accessToken`caso nosso `refreshToken` seja válidos, e podemos continuar manipulando as tarefas deste usuário.
-
-Após isso é possivel deslogar, ou apagar a conta criada, novamente enviando um header com seu `refreshToken`
-
-<details>
-<summary>Show</summary>
-
-* Criar conta:
-
-```Bash
-curl -X 'POST' \
-  'http://localhost:3000/auth/logout' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer <token>' \
-  -d ''
-```
-
-ou
-
-* Apagar conta:
-
-```Bash
-curl -X 'DELETE' \
-  'http://localhost:3000/auth/closeaccount' \
-  -H 'accept: application/json' \
-  -H 'Authorization: Bearer <token>'\
-  -d '{
-  "email": "name@provider.com",
-  "password": "password123"
-}'
-```
-
-</details>
+*Nota: Como discutido adiante, estmos utilizando o react-router e portanto, caso sirva manualmente ou com algum serviço a pasta dist, resultado da complição do projeto, é nescessário redirecionar os requests de rotas para o entry point como feito em [vercel.json](/vercel.json) para o uso com a vercel.*  
 
 ### Projeto
 
-O projeto foi desenvolvido utilizando o framework NestJS e foi escolhido trabalhar com o PostgreSQL pois existe uma ferramenta que permite pequenos bancos de dados gratuitos perfeitos para este tipo de testes, o [neon](https://neon.com). Durante o desenvolvimento foi testado tanto no banco de dados local quanto usando o neon.
+#### Escolhas técnicas
+Para este projeto, foi utilizado como base Vite+React com TypeScript que são ferramentas consolidadas no mercado.
+Além disso, foram utilizadas, principalmente, as seguintes `packages`:
+* Tailwindcss v4 & Shadcn/ui: Blibioteca de componentes visuais facilitando a criação e padronização de componentes so longo da aplicação
+* Leaflet: Blibioteca para a visualização de mapas.
+* Reacut-Router-Dom: Blibioteca para orgainazação de páginas e rotas.
+Estas blibiotecas foram escolhidas pois, novamente, já são consolidadas e todas tem licença de uso MIT ou APU.
 
-Como estamos no NestJS e para manter uma boa escalabilidade, foi decido por utilizar o [TypeORM](https://docs.nestjs.com/recipes/sql-typeorm).
+Além disso foram implementados os temas claros e escuro e o design é resposivél garantindo uma boa UX não só na versão desktop.
 
-Aplicação foi desenvolvida em 4 módulos:
+Para o compartilhamento de informações dentro do aplicativo foi utlizado o contexo padrão do react pois esta aplicação é relativamente pequena. Foram criados dois *providers* um para o uso de alertas genéricos e um para informações globais como usuário logado, tema atual e se estamos ou não no mobile (baseado no tamanho da tela).
 
-* Auth: responsável pelas rotas e logica de controle de acesso, incluindo controle de tokens.
-* Users: contém o serviço para a manipulação de usuários no banco de dados.
-* Tasks: responsável pelas rotas de manipulação de tarefas e a manipulação das mesmas no banco de dados.
-* Misc: apenas um *controller* utilizado para uma rota de vida e um redirecionamento da página incial para a documentação da api do Swagger.
+As informações de usuário e preferência de tema são persistentes no navegador do usuário, utilizando o *localStorage*.
 
-Para a documentação da api foi utilizado o o modulo do Swagger do NestJS.
+#### Dashboard
 
-Na parte de [autenticação](#autenticação) foi utilizada uma estrategia de tokens de acceso e de sessão como pode ser visto mais abaixo. Para proteger as rotas devidamente foi feito dois *middlewares* um que permite apenas `accessToken` válidos acesso as rotas do manipulação de tarefas. Ele checa o token e caso seja válido insere o ID do usuário no corpo da requisição. O outro *middleware* protege as rotas de autenticação, exeto pela rota de login e cadastro. Ele faz a mesma coisa e além de inserir o id do usuário, ele insere também o token em sí no corpo.
+O aplicativo permite a visualização dos dados em anexo (dados de pessoal por dia em cada localização). Estes dados primeiramente são agrupados por área ou por data e posteriormente filtrados e agregados de acordo com a interação do usuário.
 
-Para a validação dos dados recebidos pela aplicação, onde foi possivél, é utilizado o pacote `class-validator`, porém onde era nescessario algo mais especifico ou uma transformação dos dados, foi implementados *class trasforms* própios, dessa forma todos os dados chegam já tratados nos *controllers*.
+O dashboard principal é composto primordialmente por 3 partes:
+* Visualização de séries temporais
+* Cards de estatistica
+* Vizualização de destribuição dos dados em um ponto
 
-Como é utilizado o `class-validator` e seus pipes foi feito a escolha de responder em padronizar os erros (respostas sem código 2xx) baseado na resposta dele, desta forma, toda requisição inválida tem uma resposta com o formato:
+Os dados podem ser agregados considerando:
+* Por tipo de função
+* Por área
+* Total
 
-```c
-{
-    error: string,
-    message: string[],
-    statusCode: int  
-}
-```
+E podém ser agrupados por:
+* Valor por dia
+* Soma dos valores durante a semana
+* Soma dos valores durante o mês
 
-Além disso, quando estamos em ambiente de desenvolvimento (`NODE_ENV: 'development'`) temos mensagens especificas dos erros de login ou dos erros de autenticação, porém em produção apenas uma mensagem de erro generica é enviada ao usuário para evitar vazar informações que possam ajudar agentes mal intencionados.
+Além disso podemos filtrar apenas pelos dados das últimas 24 horas, 15 dias, 30 dias ou todos os dados, entretanto esse periodo considera o dia atual 30/08/2025 pois os dados são estaticos e este é o último dia com dados disponíveis.
 
-Durante a manipulação de tarefas, a requisção passa pelo *middleware* ou seja ele contém um `accessToken` válido, entretanto, o *controller* ainda é responsavél por checar se aquele usuário pode manipular aquela tarefa.
+Desta forma temos:
+- **A visualização principal** dos dados temporais que podem ser em graficos de área, barra ou linha e pode ser de forma pontual ou interpolada por spline nos gráficos que suportam tal funcionalidade. o gráfico de pizza foi deliberadamente separado desta parte pois ele não permite o plot de multiplas séries temporais.
+- **Cards de estatísticas** mostarando a média e o pico com as unidades corretas baseado nos filtros e formas de agragação e periodo.
+- **Visualição de distribuição** dos dados totais por area ou de funções em uma area. o usuario pode selecionar qual área (caso mais de uma esteja nos filtros) ou a distribuição por área. Além disso, é possível selecionar qual dos pontos (dia, semana ou mês ~~ e futuramente horas?~~) disponiveis nos dados filtrados deseja visualizar (último ponto por padrão).
 
-Como estamos utilizando o TypeORM, desde que não haja tabelas com os nomes `refreshtokens`, `users` e `tasks` no *database* utilizado o própio TypeORM as cria porém caso elas existam isso causará um erro que deve ser manualmente resolvido, pois não faz sentido fazer uma *migration* que drop tabelas que não sabemos o conteúdo. Além disso o *schema* das tabelas esta disponível [aqui](/src/model/schema.sql).
+#### Mapa
 
-Nesta aplicação as tarefas podem ser apagadas e restauradas, para isso foi criado um campo `deleteAt` que marca quando elas foram deletadas e caso seja `null` significa que elas não foram deletadas (ou foram restauradas) permitindo um *soft delete* nas tarefas e *restore*. Isso foi implementado manualmente e não utilizando o `softDelete` do própio typeORM.
+Além, do dashboard, foi construido um mapa, utilizando o [leaflet](https://leafletjs.com/) onde podemos visualizar cada área, podendo filtrar por tipo de área e ao clicar no *marker* dela podemos ver os dados do ultimo ponto de dados daquela área. É possivél selecionar entre o mapa normal ou satélite. Este é o único local onde foi necessário utilizar um arquivo css para poder própiamente aplicar o tema escuro no *popup* do mapa.
 
-Além disso o campo `dueDate`, que determina a data limite de cada tarefa, porém ela pode ser `null` significando uma tarefa sem limite temporal que pode ser útil para o usuário.
+#### Extras
 
-##### Autenticação
+Além destas telas, foi feita também uma tela do login para o qual o usuário é redirecionado caso seja inválidado (atualmente a única forma é manuamente deslogando mas posteriormente seria pela sessão inválidada). Da mesma forma caso já tenha um usuário logado ele é redirecionado para o dashboard. Porém como é um sistema de testes, caso não tenha um usuário (foi feito o logout), durante a montagem do *provider* global o usuário de demonstração é logado automaticamente (que atualmente é o único disponível), então dar um *refresh* na pagina de login fará o usuário logar na conta de demonstração.
 
-Para autenticação foi utilizada uma estrategia de `accessToken` e `refreshToken` onde o usuário recebe ao fazer login um token de cada. O `accessToken` é um JWT de curta duração que permite que o usuário acesse o banco de dados até o fim da duração delete. Enquanto isso o `refreshToken` atua quase que como um token de sessão, ele tem duração bem mais alta e permite que o usuário gere novos `accessToken` e que faça operações de logout ou de fechar a conta.
+É possível simular um upgrade de conta, que é persistente no browser, porém como não temos um backend conectado, esta conta é resetada toda vez que o ciclo de logout/login acontece.
 
-Apesar de ambos serem JWT's `accessToken` e `refreshToken` não são intercambiaveis e **DEVEM** ter chaves privadas distintas usar um no lugar do outro é o mesmo que usar uma string aleatória.
-
-Toda vez que um `refreshToken` é gerado, ele é armazenado no banco de dados e toda vez que ele é utilizado em uma operação ele é, além de verificado a assinatura do JWT em sí, também é verificado se ele estar no banco de dados. permitindo que um usuário se conecte de mais de um dispositivo ao mesmo tempo.
-
-Ao fazer um logout com `?everywhere=true` todos os `refreshToken` deste usuário são deletados, o que significa que após o `accessToken` de outras sessões expirarem (a.k.a outros `refreshToken` do mesmo usuário), eles teram que fazer o login novamente para poder continuar acessando a API.
-
-Isto também ocorre caso o usuário decida fechar sua conta (porém as *tasks* são permanentemente deletadas no fechamento da conta automaticamente). Para fechar a conta o usuário precisa reenviar suas credenciais, diminuindo o dano que pode ser causado por um *session hijack*.
-
-##### Lógica de Negocios
-
-Para criar uma conta, o usuário precia informar senha, email e nome e o email não pode já esta cadatrado. Após registrar com sucesso, ele será logado.
-
-Para fazer login o usuário precisa enviar email e senha. Se ele forem credenciais válidas no sistema, o usuário recebera um  `accessToken` e `refreshToken` além de seu ID.
-Ele pode com o `refreshToken` gerar novos `acessToken`.
-
-Para manipular as tarefas, o usuário precisa de um `accessToken`, mas além disso, ele precisa que o token tenha sido emitido com o ID igual ao dono da tarefa ao qual ele esta tentando manipular caso contrario ele recebera uma resposta http *Forbbiden*.
-
-Um usuário ver todas suas tarefas (com um filtro opcional sobre o status dela) ou todas suas tarefas deletadas.
-
-Um usuário pode criar uma tarefa enviando o titulo e a descrição e pode ou não enviar a data de termino da tarefa no formato `string` que vai ser parseada pelo `new Date()` do js, porém caso esta esteja presente ele tem que ser uma data [válida](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) e não pode ser no passado.
-
-Um usuário pode editar tarefas utilizando ID da mesma e passando status, titulo, descrição ou data de termino(mesmas regras de criação se aplicam a data), nenhuma dessas opções é obrigatoria mas ao menos uma precisa estar presente
-
-Um usuário pode deletar uma tarefa utilizando o ID da mesma. Neste caso a tarefa é marcada como deletada e não apareca em futuras buscas de tarefas do usuário (e aparecera nas buscas por tarefas deletadas).
-
-Um usuário pode restaurar uma tarefa que foi anteriormente deleta utilizando o ID da mesma.
-
-Um usuário pode fechar sua propia conta fornecendo seu `refreshToken` e suas novamente suas credenciais.
+Como este aplicativo foi desenvolvido para o Desafio Técnico da Trackfy, o aplicativo conta com material personalizado, tanto no login quanto nos recursos de PWA/favicon que **só estaram disponiveis temporariamente** e seram retirados com celeridade após tal etapa.
 
 ### Melhorias futuras:
 
-Para este projeto temos algumas melhorias que podem ser feitas:
-* Adicionar válidação de email para cadastro de usuários.
-* Adicionar mais filtros possiveis para buscar tarefas (e as deletadas), especialmente para que retorne um numero especifico de tarefas começando de um offset.
-* Criar CronJob para retirar refreshTokens invalidos do banco de dados.
-* Criar CronJob para deletar permanentemente tarefas marcadas como deletadas no banco de dados e alterar o status para `late` de tarefas atrasadas.
-* Implementar um usúario admin que tenha acesso a outros usuários e tarefas.
-* ~~Fora do escopo de backend mas implementar um front, mesmo que, simples para que possa ser testado o aplicativo diretamete.~~
-* Escrever os testes unitarios pra as unidades mais importantes.
-* Transformar os refreshTokens em cookies ~~este era o projeto inicial mas não esteva funcionando com o insomnia apesar de funcionar no postman~~.
+Um projeto deste tipo, caso evolua para um produto real, ou caso tivese mais tempo para desenvolvimento, tem varios pontos de melhorias:
+
+##### Pontos iniciais:
+
+Primeiramente, teriamos que fazer um sistema um pouco mais robusto de autenticação & autorização, implementando alguma estratégia de session como JWT.
+Além disso, com o crescimento da aplicação seria interessante implementar alguma estruturas que suportem um aplicação mais complexa como:
+- **redux:** para o controle de estados mais complexos.
+- **react-query**: para melhoria de performance em caso de multiplas requições e, principalmente, ter a possibilidade de ter o filtro armazenado na url ao invés de estado, permintindo o usuário a salvar/compartilhar o aplicativo filtro específico pre-selecionado além de permitir, por exemplo, o filtro no menu lateral na versão mobile com mais facilidade.
+- **i18n:** Caso o aplicativo tenha como publico alvo usuários cuja lingua primaria não seja o portugues, seria interessante a internaciolanização do aplicativo.
+Introduzir estas mudanças no começo do desenvolvimento facilita-rá bastante o desenvolvimento caso tais caracteristicas sejam desejadas ou necessárias com o aumento da complexidade do aplicativo.
+
+##### SSR/SSG/CRS
+Como esta aplicação é algo amplamente dinamico, precisamos de bastante coisa gerada no *client-side* além disso, não teriamos muitas vantgens nas páginas serem geradas no *server-side* pois ela estaria protegida por autenticação, não tendo impacto no SEO, desta forma não teria muitas vantagens utilzar tecnicas de SSR/SSG, entretanto, ***caso fosse desejado***, poderiamos gerar uma landing page separadamente, otimizando o SEO, e utilizar um subdominio para o aplicativo i.e. trackapp.com -> landing page app.trackapp.com -> aplicativo. 
+
+##### Análise de Dados
+Na parte de analise de dados, a depender o tamanho do data-set utilizado, poderiamos utilizar o indexDB para manter uma cópia do banco dados localmente e utilizar um *service-worker* para manter ele atualizado no background, diminuindo o tempo de requisição do banco de dados.
+Além disso, eu implementaria a possibilidade de escolher um range especifico de dias (ou granulado à horas caso tenha acesso a tais dados) tanto de começo quanto de final podendo análisar periodos especificos de dias.
+
+##### UI
+Na parte de UI, teria mais atenção à escolha da palheta, especialmente para o tema claro e implementaria mais coisas ainda como variaveis css ao inves de hardcode, possibilitanto facilmente a manutenabilidade e coesão.
+Além disso, com mais tempo faria melhorias as visualizações das *labels* dis gráficos.
+
+##### UX
+Para a UX, eu implementaria a interação com cliques no gráfico e seleção de range segurando o mouse diretamente no grádico, além disso, como teriamos dados dinamicos, seria interessante adicionar *skeleton-loaders* para os componentes que precisam desses dados. 
+

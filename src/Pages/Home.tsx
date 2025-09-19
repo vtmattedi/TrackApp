@@ -147,7 +147,7 @@ const Home: React.FC = () => {
                                 <div className='flex items-center w-full justify-center '>
                                     <Button variant="outline" className='border font-lato font-[400]  '>
                                         <ListFilter className="mr-2" />
-                                        Filtros & Vizualização
+                                        Filtros & Visualização
                                     </Button>
                                 </div>
                             </PopoverTrigger>

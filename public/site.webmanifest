@@ -11,6 +11,7 @@
         {
             "name": "Dashboard",
             "url": "/",
+            "description": "Acesse o dashboard com suas métricas.",
             "icons": [
                 {
                     "src": "https://trackfyapp.com.br/images/logo/favicon.png"
@@ -21,6 +22,7 @@
         {
             "name": "Mapa",
             "url": "/Map",
+            "description": "Veja as áreas no mapa interativo.",
             "icons": [
                 {
                     "src": "/https://trackfyapp.com.br/images/logo/favicon.png"

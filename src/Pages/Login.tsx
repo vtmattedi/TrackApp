@@ -12,6 +12,10 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    //Unfort. no errors to test, using _ to avoid lint error
+    // uncomment to test
+    // const [errors, _setErrors] = useState<string[]>(["Credenciais inválidas"]);
+    const [errors, _setErrors] = useState<string[]>([]);
     const { showAlert } = useAlert();
     const { setUser, onMobile, theme } = useGlobals();
     const navigate = useNavigate();
@@ -89,7 +93,7 @@ const Login: React.FC = () => {
                     </div>
                 </CardHeader>
                 <CardContent className="font-inter">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className={onMobile ? "space-y-4" : "space-y-6"}>
                         <div>
                             <label htmlFor="email" className="block mb-1 text-sm font-medium">
                                 Email
@@ -103,6 +107,7 @@ const Login: React.FC = () => {
                                 required
                                 autoFocus
                             />
+                            
                         </div>
                         <div>
                             <label htmlFor="password" className="block mb-1 text-sm font-medium">
@@ -118,6 +123,16 @@ const Login: React.FC = () => {
                                 autoComplete="current-password"
                             />
                         </div>
+                        {errors.length > 0 && (
+                            <div className="bg-red-100 text-red-700 p-2 rounded text-sm font-sm ">
+                                <ul className="list-disc list-inside">
+                                    {errors.map((error, index) => (
+                                        <li key={index}>{error}</li>
+                                    ))
+                                    }
+                                </ul>
+                            </div>
+                        )}
                         <Button type="submit" className="w-full bg-[var(--color-accent-trackfy)] hover:bg-[var(--color-accent-trackfy-hover)]" disabled={loading}>
                             {loading ? "Entrando..." : "Entrar"}
                         </Button>
