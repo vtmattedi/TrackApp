@@ -1,7 +1,7 @@
 import React from 'react';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { MoonStar, Sun } from 'lucide-react';
-import { useGlobals } from '@/Providers/GlobalCtx';
+import { useGlobals } from '@/Providers/Globals';
 //Theme Toggle component -> Extract to separate file to have it in the header and login page
 
 const ThemeSelector: React.FC = () => {

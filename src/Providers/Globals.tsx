@@ -1,18 +1,20 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
+type PlanType = 'Free' | 'Silver' | 'Gold' | 'Platinum';
+
 interface IUser {
     id: number;
     name: string;
     email: string;
-    plan: '' | 'Free' | 'Silver' | 'Gold' | 'Platinum';
+    plan: PlanType;
     avatarUrl: string;
 }
 
 const defaultUser: IUser = {
     id: -1,//Fake ID for default user
     name: 'John Doe',
-    email: 'johndoe@trackfy',
-    avatarUrl: 'https://i.pravatar.cc/?u=johndoe@trackfy',
+    email: 'johndoe@trackfy.com',
+    avatarUrl: 'https://i.pravatar.cc/?u=johndoe@trackfy.com',
     // Placeholder avatar image,  fake API that will always return the same image for the same email
     plan: 'Silver',
 }
@@ -23,6 +25,7 @@ type GlobalState = {
     setUser: (user: IUser | null) => void;
     setDarkMode: (darkMode: boolean) => void;
     logout: () => void;
+    changeUserPlan: (newPlan: IUser['plan']) => void;
     onMobile: boolean;
 };
 
@@ -62,6 +65,10 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         }
         localStorage.setItem('user', JSON.stringify(user));
     }
+    const changeUserPlan = (newPlan: PlanType) => {
+        if (!user) return; // This should throw an error or handle unauthenticated state
+        setUser({ ...user, plan: newPlan });
+    }
     const logout = () => {
         setUser(null);
     }
@@ -76,7 +83,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         }
         // add event listener to track window resize and set onMobile accordingly
         const handleResize = () => {
-            setOnMobile(window.innerWidth < 1000);// 1000px breakpoint for the filter bar
+            setOnMobile(window.innerWidth < 1200);// 1200px breakpoint for the filter bar
         };
         window.addEventListener('resize', handleResize);
         handleResize(); // Initial check
@@ -102,7 +109,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
 
     }, []);
     return (
-        <GlobalContext.Provider value={{ user, theme, setUser, setDarkMode, onMobile, logout }}>
+        <GlobalContext.Provider value={{ user, theme, setUser, setDarkMode, onMobile, logout, changeUserPlan}}>
             {children}
         </GlobalContext.Provider>
     );

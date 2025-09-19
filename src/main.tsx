@@ -8,8 +8,8 @@ import Map from './Pages/MapPage.tsx';
 import Layout from './Layout.tsx';
 import Home from './Pages/Home.tsx';
 import Login from './Pages/Login.tsx';
-import { GlobalProvider } from './Providers/GlobalCtx.tsx';
-import { AlertProvider } from './Providers/Alert.tsx';
+import { GlobalProvider } from './Providers/Globals.tsx';
+import { AlertProvider } from './Providers/Alerts.tsx';
 const router = createBrowserRouter([
   {
     path: "/",

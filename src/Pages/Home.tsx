@@ -1,13 +1,13 @@
 import React from 'react';
 import Chart, { type ChartData } from '../components/MainChart';
 import { Card, CardHeader } from '@/components/ui/card';
-import { useGlobals } from '@/Providers/GlobalCtx';
+import { useGlobals } from '@/Providers/Globals';
 import { getDataPerDate, chartConfigPerDate, chartConfigPerArea, chartConfigTotal } from '@/assets/util/AttachedData';
 // import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ListFilter, TrendingUp, CircleSlash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import InfoCard from '@/components/InforCard';
+import InfoCard from '@/components/InfoCard';
 import Filters, {
     type FilterType, availableAreas, availableFunctions, avilableAggragates, avilableTimes
 } from '../components/Filter';
@@ -139,15 +139,12 @@ const Home: React.FC = () => {
                 style={{
                     position: 'sticky',
                     zIndex: 999,
-
                 }}>
                 {
                     onMobile ? (
                         <Popover>
                             <PopoverTrigger asChild>
                                 <div className='flex items-center w-full justify-center '>
-
-
                                     <Button variant="outline" className='border font-lato font-[400]  '>
                                         <ListFilter className="mr-2" />
                                         Filtros & Vizualização
@@ -158,17 +155,17 @@ const Home: React.FC = () => {
                                 <Filters filters={filters} setFilters={setFilters} className='flex flex-col gap-4 w-full justify-between' />
                             </PopoverContent>
                         </Popover>
-                    ) : <Filters filters={filters} setFilters={setFilters} className='flex w-full justify-between p-1' 
+                    ) : <Filters filters={filters} setFilters={setFilters} className='flex w-full justify-between p-1'
                     />
 
                 }
             </div>
             {/* Chart Section */}
-            <div className='w-[100vw] h-[calc(100vh-64px-52px)] flex justify-center items-flex-start px-4 mt-1'
+            <div className='w-[100vw] max-h-[calc(100vh-64px-52px)] flex px-4 '
                 style={{
                     flexDirection: onMobile ? 'column' : 'row',
                     justifyContent: onMobile ? 'flex-start' : 'center',
-                     padding: onMobile ? '0' : undefined,
+                    padding: onMobile ? '0' : undefined,
                     marginTop: '0.25rem',
                     marginLeft: onMobile ? 'auto' : undefined,
                     marginRight: onMobile ? 'auto' : undefined,
@@ -177,12 +174,15 @@ const Home: React.FC = () => {
                 }}
             >
                 {/* Main Chart */}
-                <div className='h-full '
+                <div className='rounded-md  '
                     style={{
                         minWidth: onMobile ? undefined : '650px',
-                    }}
+                    }}>
+                    <Card className='h-full '
+                        style={{
+                            minHeight: onMobile ? undefined : '733px',
+                        }}
                     >
-                    <Card className='w-full h-full'>
                         <CardHeader className='font-lato'>
                             <div className='flex flex-col p-0'>
                                 <div className='font-lato text-3xl'>Quantidade de funcionarios {getDataTypeLabel().time.toLowerCase()}</div>
@@ -191,24 +191,29 @@ const Home: React.FC = () => {
                                 </div>
                             </div>
                         </CardHeader>
-                        <Chart data={getFilteredData()} chartConfig={filterChartConfig()} />
+                        <div style={{
+                            maxWidth: onMobile ? '1000px' : undefined,
+                            margin: '0 auto',
+                        }} className='w-full'>
+                            <Chart data={getFilteredData()} chartConfig={filterChartConfig()} />
+                        </div>
                     </Card>
                 </div>
                 {/* Side Info - Pie Chart and Averages */}
-                <div className='flex gap-2 flex-col w-full '
+                <div className='flex flex-col'
                     style={{
                         //prob want extra space at the bottom cuz modern phones have a bottom bar that covers content
-                        marginBottom: onMobile ? '5rem' : '0', 
+                        marginBottom: onMobile ? '5rem' : '0',
                     }}
                 >
+                    {/* Averages and Peaks */}
                     <div className='flex flex-row '
                         style={{
-                            marginLeft: onMobile ? '0' : '1rem',
+                            marginLeft: onMobile ? '0' : '0.5rem',
                             marginTop: onMobile ? '0.5rem' : '0',
-                            gap: onMobile ? '0.25rem' : '1rem',
-                        }}
-
-                    >
+                            marginBottom: onMobile ? '0.5rem' : '0.5rem',
+                            gap: onMobile ? '0.25rem' : '0.5rem',
+                        }}>
                         <InfoCard
                             style={{
                                 width: onMobile ? '50%' : undefined,
@@ -226,13 +231,18 @@ const Home: React.FC = () => {
                             number={getFilteredMax().value}
                             unit={`de funcionários em um${['Weekly', 'Hourly'].includes(filters.dataType.time) ? 'a' : ''} ${filters.dataType.time == 'Daily' ? 'dia' : filters.dataType.time == 'Weekly' ? 'semana' : filters.dataType.time == 'Monthly' ? 'mês' : 'hora'}`}
                             description={(getFilteredMax().date ? "Registrado em " + getFilteredMax().date : "Sem dados") + "."}
-
                         />
-
                     </div >
-                    <PieCard
-                        filters={filters}
-                    />
+                    {/* Pie Chart */}
+                    <div className=' flex justify-center items-center'
+                        style={{
+                            marginLeft: onMobile ? '0' : '0.5rem'
+                        }}
+                    >
+
+                        <PieCard
+                            filters={filters} />
+                    </div>
                 </div>
             </div >
 

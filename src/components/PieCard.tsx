@@ -12,7 +12,7 @@ import {
 import { LabelList, PieChart, Pie } from 'recharts';
 import { type FilterType } from '@/components/Filter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useGlobals } from '@/Providers/GlobalCtx';
+import { useGlobals } from '@/Providers/Globals';
 import CountUp from './CountUp';
 interface PieCardProps extends React.ComponentProps<"div"> {
     filters: FilterType;
@@ -153,7 +153,6 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
         const data = baseData.map(d => new Date(d.date)).filter(d => {
             return filters.timeFrame < 0 || maxDate.getTime() - d.getTime() <= filters.timeFrame * 24 * 60 * 60 * 1000;
         });
-        console.log(data, filters.timeFrame);
         if (filters.dataType.time === 'Daily') {
             options = Array.from(new Set(data.map(d => d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' }))));
         }
@@ -193,11 +192,11 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     }, [selectedArea]);
 
     return (
-        <Card className={`gap-0 m-0 ${props.className}`} {...filterClassProps}
+        <Card className={`gap-0 ${props.className}`} {...filterClassProps}
             style={{
-                width: onMobile ? '100%' : '510px',
-            }}
-        >
+                width: onMobile ? '100%' : 'calc(2*250px + 0.5rem)',
+                padding: '0.25rem 0',
+            }}>
             <div className='text-center flex flex-col items-center gap-2 pb-2 '>
                 <div className='font-bold  text-xl font-lato'>
                     {
@@ -225,17 +224,13 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                         </Select>
                     </div>
                 }
-
             </div>
             <div className='my-2 h-[300px] w-full flex justify-center items-center'>
                 <ChartContainer config={getFilteredChartConfig()}
-                    className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[300px] pb-0 w-full"
-
-                >
+                    className="[&_.recharts-pie-label-text]:fill-foreground [&_.recharts-pie-label-text]:break-words [&_.recharts-pie-label-text]:text-wrap mx-auto aspect-square max-h-[300px] pb-0 w-full">
                     <PieChart>
                         <ChartTooltip
                             content={<ChartTooltipContent />}
-
                         />
                         <Pie data={getFilteredData()} dataKey="value" label={
                             ({ name, percent }) => {
@@ -247,7 +242,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                                 className="fill-background font-inter font-bold"
                                 stroke="2"
                                 fontSize={20}
-                                formatter={(percent: string) => `${percent}`}
+                                formatter={(value: string) => `${value}`}
                             />
 
                         </Pie >

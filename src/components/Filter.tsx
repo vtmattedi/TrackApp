@@ -4,10 +4,10 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { X, Squircle, ListFilter, Check, CircleCheck, CircleMinus, CircleDashed, Globe2, ShieldAlert, Info, ShieldAlertIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { useGlobals } from '@/Providers/GlobalCtx';
+import { useGlobals } from '@/Providers/Globals';
 import AnexoI from '@/assets/AnexoI.json';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useAlert } from '@/Providers/Alert';
+import { useAlert } from '@/Providers/Alerts';
 
 type AggragateTypes = 'Total' | 'by Function' | 'by Area';
 type TimeAggragateTypes = 'Hourly' | 'Daily' | 'Weekly' | 'Monthly';

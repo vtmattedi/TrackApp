@@ -2,7 +2,7 @@ Readme Struct
 
 Intro
 
- -App 
+ -App
 
  -How to Use it: req, installations
 
@@ -14,7 +14,9 @@ Stack used
 
 Improvments:
 
+-SSR/SSG/CSR
+
 - Basics: radix, rquery, i18n
 - data: indexdb
 - ui: labels, aria
-- ux: click on
+- ux: click on label, skeleton
