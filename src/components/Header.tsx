@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { ChevronDown, ChevronUp, LayoutDashboard, Menu, PartyPopper, ThumbsUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, LayoutDashboard, Menu, PartyPopper } from 'lucide-react';
 import { Map as MapIcon2 } from 'lucide-react';
 import {
     Popover,
@@ -190,7 +190,10 @@ const Header: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                        <ThemeSelector />
+                        <div className="flex items-center">
+                            <a href="https://github.com/vtmattedi/TrackApp/blob/main/README.md" target="_blank" rel="noreferrer" className="text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-4 hover:cursor-pointer mr-4 font-inter text-sm">docs</a>
+                            <ThemeSelector />
+                        </div>
 
                     </>
                 ) : (
@@ -208,7 +211,10 @@ const Header: React.FC = () => {
                         >
                             <div className="flex justify-between items-center border-b p-3 mb-4">
                                 <span className="font-bold text-lg font-lato">Menu</span>
-                                <ThemeSelector />
+                                <div className="flex items-center">
+                                    <a href="https://github.com/vtmattedi/TrackApp/blob/main/README.md" target="_blank" rel="noreferrer" className="text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-4 hover:cursor-pointer mr-4 font-inter text-sm">docs</a>
+                                    <ThemeSelector />
+                                </div>
                             </div>
 
                             <div className="flex flex-col ">

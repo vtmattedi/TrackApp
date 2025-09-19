@@ -10,7 +10,7 @@ interface IUser {
     avatarUrl: string;
 }
 
-const defaultUser: IUser = {
+export const defaultUser: IUser = {
     id: -1,//Fake ID for default user
     name: 'John Doe',
     email: 'johndoe@trackfy.com',
