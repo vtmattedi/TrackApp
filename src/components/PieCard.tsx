@@ -10,7 +10,7 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart"
 import { LabelList, PieChart, Pie } from 'recharts';
-import { type FilterType } from '@/components/Filter';
+import { availableAreas, type FilterType } from '@/components/Filter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useGlobals } from '@/Providers/Globals';
 import CountUp from './CountUp';
@@ -238,30 +238,30 @@ const PieCard: React.FC<PieCardProps> = ({ filters, periodSelected, ...props }) 
             <div className={`my-2 h-[300px] w-full flex justify-center items-center ${selectedArea === "all" ? "setCursor" : ""} `}>
                 <ChartContainer config={getFilteredChartConfig()}
                     className="[&_.recharts-pie-label-text]:fill-foreground [&_.recharts-pie-label-text]:break-words [&_.recharts-pie-label-text]:text-wrap mx-auto aspect-square max-h-[300px] pb-0 w-full hover:pointer">
-                    <PieChart
-                        onClick={(props) =>  {
-                            console.log("Clicked", props);
-                            if (!props?.activePayload || props.activePayload.length === 0) return;
-                            const name = props?.activePayload[0].payload.name || "";
-                            if (selectedArea === "all") {
-                                setSelectedArea(name);
-                            }
-                        }}
-                    >
+                    <PieChart>
                         <ChartTooltip
                             content={<ChartTooltipContent />}
                         />
                         <Pie data={getFilteredData()} dataKey="value" label={
                             ({ name, percent }) => {
                                 return onMobile ? ` ${(percent * 100).toFixed(0)}%` : `${getFilteredChartConfig()[name]?.label || name}`
-                            }
-                        } nameKey="name">
+                            }}
+                            nameKey="name"
+                            onClick={(props) => {
+                                console.log("Clicked", props);
+                                const name = props?.name || "";
+                                if (selectedArea === "all" && availableAreas.includes(name)) {
+                                    setSelectedArea(name);
+                                }
+                            }}
+                        >
                             <LabelList
                                 dataKey="value"
                                 className="fill-background font-inter font-bold"
                                 stroke="2"
                                 fontSize={20}
                                 formatter={(value: string) => `${value}`}
+
                             />
 
                         </Pie >
@@ -316,7 +316,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, periodSelected, ...props }) 
                     .
                 </div>
             </div>
-            
+
         </Card >
     );
 };

@@ -54,7 +54,6 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
     const Ydomain = <YAxis domain={[0, (dataMax: number) => Math.round(dataMax * 1.05)]} />;
     const Legend = <ChartLegend content={<ChartLegendContent />} className="flex-wrap gap-2  *:justify-center" />;
     const _onClick = (props:any) => {
-        console.log("Clicked", props);
         if (!periodChange) return;
         if (props && props.activeLabel) {
             periodChange(props.activeLabel);
