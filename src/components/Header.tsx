@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sheet"
 import ThemeSelector from './ThemeSelector';
 import { useNavigate } from 'react-router-dom';
-import { useGlobals } from '@/Providers/globals';
+import { useGlobals } from '@/Providers/GlobalCtx';
 
 
 const Header: React.FC = () => {

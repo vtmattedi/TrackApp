@@ -3,14 +3,17 @@ import { Card } from './ui/card';
 import { chartConfigPerArea, chartConfigPerDate, getDataPerDate } from '@/assets/util/AttachedData';
 import {
     ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
     type ChartConfig,
 } from "@/components/ui/chart"
 import { LabelList, PieChart, Pie } from 'recharts';
-import { type FilterType } from '@/components/filters';
+import { type FilterType } from '@/components/Filter';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useGlobals } from '@/Providers/globals';
+import { useGlobals } from '@/Providers/GlobalCtx';
+import CountUp from './CountUp';
 interface PieCardProps extends React.ComponentProps<"div"> {
     filters: FilterType;
 }
@@ -21,7 +24,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     delete filterClassProps.className; // Remove className to avoid passing it twice
     const [numAreas, setNumAreas] = React.useState<number>(filters.area.length);
     const [selectedArea, setSelectedArea] = React.useState<string>("all");
-    const [selectedDate, setSelectedDate] = React.useState<number>(0);
+    const [selectedDateIndex, setSelectedDateIndex] = React.useState<number>(0);
     const [dateOptions, setDateOptions] = React.useState<string[]>([]); // Options for date selection
     const { onMobile } = useGlobals();
     // Component re-renders when filters change so we can use simple functions to get filtered data
@@ -34,7 +37,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
             const _area = numAreas === 1 ? filters.area[0] : selectedArea;
             const data = baseData;
             // Final Data for the most recent date
-            const newData = [] as { name: string, value: number, fill: string }[];
+            const newData = [] as { name: string, value: number, fill: string, id: string | undefined }[];
             let count = 0; // Helper to assign colors
             //Extract keys from the last object in data array (most recent date)
             data.forEach(item => {
@@ -53,11 +56,11 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                     const date = new Date(item.date);
                     key = date.toLocaleString('pt-BR', { month: 'short', year: '2-digit' });
                 }
-                if (key !== dateOptions[selectedDate]) {
+                if (key !== dateOptions[selectedDateIndex]) {
                     return;
                 }
                 item.values.forEach(item => {
-                    if (item.area !== _area ) {
+                    if (item.area !== _area || !filters.function.includes(item.function)) {
                         return;
                     }
                     const existing = newData.find(newItem => newItem.name === item.function);
@@ -69,6 +72,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                         count++;
                         newData.push({
                             name: item.function,
+                            id: item.function, // id is used to get the color from config
                             value: item.value,
                             // Makes sure we get the correct color from config, maintaing consistency
                             fill: chartConfigPerDate[item.function as keyof typeof chartConfigPerDate]?.color || `var(--chart-${count})`,
@@ -82,7 +86,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
         // If multiple areas selected, return aggregated data per area
         else {
             const data = baseData
-            const newData = [] as { name: string, value: number, fill: string }[];
+            const newData = [] as { name: string, value: number, fill: string, id: string | undefined }[];
             let count = 5; // Helper to assign colors
             // Starts at 5 to avoid color clash with functions
             data.forEach(item => {
@@ -101,7 +105,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                     const date = new Date(item.date);
                     key = date.toLocaleString('pt-BR', { month: 'short', year: '2-digit' });
                 }
-                if (key !== dateOptions[selectedDate]) {
+                if (key !== dateOptions[selectedDateIndex]) {
                     return;
                 }
                 item.values.forEach(item => {
@@ -115,8 +119,11 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                     }
                     else {
                         count++;
+                        // id is used to get the color from config
+                        const id = Object.keys(chartConfigPerArea).find(key => chartConfigPerArea[key as keyof typeof chartConfigPerArea].label === item.area);
                         newData.push({
                             name: item.area,
+                            id: id,
                             value: item.value,
                             fill: `var(--chart-${count})`,
                         });// For debug
@@ -125,11 +132,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
 
             });
             return newData;
-
-
         }
-
-
     }
 
     const getFilteredChartConfig: () => ChartConfig = () => {
@@ -145,14 +148,19 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     }
     React.useEffect(() => {
         // Generate date options based on selected area
+        const maxDate = new Date(Math.max(...baseData.map(d => new Date(d.date).getTime())));
         let options: string[] = [];
+        const data = baseData.map(d => new Date(d.date)).filter(d => {
+            return filters.timeFrame < 0 || maxDate.getTime() - d.getTime() <= filters.timeFrame * 24 * 60 * 60 * 1000;
+        });
+        console.log(data, filters.timeFrame);
         if (filters.dataType.time === 'Daily') {
-            options = Array.from(new Set(baseData.map(d => new Date(d.date).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' }))))
+            options = Array.from(new Set(data.map(d => d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' }))));
         }
         else if (filters.dataType.time === 'Weekly') {
             const weekSet = new Set<string>();
-            baseData.forEach(d => {
-                const date = new Date(d.date);
+
+            data.forEach(date => {
                 const firstDayOfWeek = new Date(date);
                 firstDayOfWeek.setDate(firstDayOfWeek.getDate() - firstDayOfWeek.getDay());
                 const lastDayOfWeek = new Date(firstDayOfWeek);
@@ -163,14 +171,17 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
             options = Array.from(weekSet);
         }
         else if (filters.dataType.time === 'Monthly') {
-            options = Array.from(new Set(baseData.map(d => {
-                const date = new Date(d.date);
+            options = Array.from(new Set(data.map(date => {
                 return date.toLocaleString('pt-BR', { month: 'short', year: '2-digit' });
             })));
         }
-        setDateOptions(options.reverse());
-        setSelectedDate(0); // Default to the most recent date
-    }, [filters.dataType.time]);
+        const newOptions = options.reverse();
+        const oldSelectedDate = dateOptions[selectedDateIndex];
+        // If the old selected date is still in options, keep it selected
+        const newSelectedDateIndex = newOptions.indexOf(oldSelectedDate);
+        setDateOptions(newOptions);
+        setSelectedDateIndex(newSelectedDateIndex !== -1 ? newSelectedDateIndex : 0); // Default to the most recent date
+    }, [filters.dataType.time, filters.timeFrame]);
     React.useEffect(() => {
         setNumAreas(filters.area.length);
         if (!filters.area.includes(selectedArea)) {
@@ -182,67 +193,49 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     }, [selectedArea]);
 
     return (
-        <Card className={props.className} {...filterClassProps}
+        <Card className={`gap-0 m-0 ${props.className}`} {...filterClassProps}
             style={{
                 width: onMobile ? '100%' : '510px',
-                height: '100%',
             }}
         >
-            <div className='text-center text-lg font-inter flex justify-center items-center gap-2 '>
-                {
-                    numAreas === 0 ? " Selecione ao menos uma área para ver a distribuição." : numAreas === 1 ? filters.area[0] : "Distribuição por Área" + (selectedArea == 'all' ? "" : ": " + selectedArea)
-                }
+            <div className='text-center flex flex-col items-center gap-2 pb-2 '>
+                <div className='font-bold  text-xl font-lato'>
+                    {
+                        numAreas === 0 ? " Selecione ao menos uma área para ver a distribuição." : numAreas === 1 ? filters.area[0] : "Distribuição por Área" + (selectedArea == 'all' ? "" : ": " + selectedArea)
+                    }
+                </div>
                 {numAreas > 1 &&
-                    <Select
-                        value={selectedArea}
-                        onValueChange={setSelectedArea}
-                    >
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Selecione uma área" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem key={"allAreas"} value="all">Todas as Áreas</SelectItem>
-                            {filters.area.map(area => (
-                                <SelectItem key={area} value={area}>
-                                    {area}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <div className='flex w-full gap-2 items-center text-lg font-inter font-[300] justify-center dark:text-gray-300'>
+                        Analisar área:
+                        <Select
+                            value={selectedArea}
+                            onValueChange={setSelectedArea}
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Selecione uma área" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem key={"allAreas"} value="all">Todas as Áreas</SelectItem>
+                                {filters.area.map(area => (
+                                    <SelectItem key={area} value={area}>
+                                        {area}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 }
-                <Select
-                    value={selectedDate.toString()}
-                    onValueChange={(value) => {
-                        const index = parseInt(value);
-                        if (isNaN(index) || index < 0 || index >= dateOptions.length) {
-                            setSelectedDate(dateOptions.length - 1);
-                        }
-                        else {
-                            setSelectedDate(parseInt(value));
-                        }
-                    }}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Selecione uma data" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem key={"last"} value="-1">Última </SelectItem>
-                        {dateOptions.map((dateStr, index) => (
-                            <SelectItem key={dateStr} value={index.toString()}>
-                                {dateStr}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+
             </div>
-            <div >
+            <div className='my-2 h-[300px] w-full flex justify-center items-center'>
                 <ChartContainer config={getFilteredChartConfig()}
-                    className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0 w-full"
+                    className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[300px] pb-0 w-full"
 
                 >
                     <PieChart>
                         <ChartTooltip
-                            content={<ChartTooltipContent hideLabel />}
+                            content={<ChartTooltipContent />}
+
                         />
                         <Pie data={getFilteredData()} dataKey="value" label={
                             ({ name, percent }) => {
@@ -256,9 +249,58 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                                 fontSize={20}
                                 formatter={(percent: string) => `${percent}`}
                             />
-                        </Pie>
+
+                        </Pie >
+                        {onMobile && <ChartLegend content={<ChartLegendContent nameKey='id' />}
+                            className="flex-wrap gap-2  *:justify-center" />}
                     </PieChart>
                 </ChartContainer>
+            </div>
+            <hr />
+            <div className='text-center m-0 gap-1 p-2 flex flex-col'>
+                <div className='flex w-full gap-2 items-center text-lg font-inter font-[300] justify-center dark:text-gray-300 '>
+                    <div className=''>Periodo :</div>
+                    <Select
+                        value={selectedDateIndex.toString()}
+                        onValueChange={(value) => {
+                            const index = parseInt(value);
+                            if (isNaN(index) || index < 0 || index >= dateOptions.length) {
+                                setSelectedDateIndex(dateOptions.length - 1);
+                            }
+                            else {
+                                setSelectedDateIndex(parseInt(value));
+                            }
+                        }}
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Selecione uma data" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem key={"last"} value="-1">Última </SelectItem>
+                            {dateOptions.map((dateStr, index) => (
+                                <SelectItem key={dateStr} value={index.toString()}>
+                                    {dateStr}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className='flex gap-2 items-center text-2xl font-inter justify-center mt-2'>
+                    Total:
+                    <CountUp
+                        from={0}
+                        to={getFilteredData().reduce((a, b) => a + b.value, 0)}
+                        duration={1}
+                        separator="."
+                    />
+                </div>
+                <div className='text-center text-sm text-muted-foreground font-inter'>
+                    de funcionarios {filters.dataType.time === 'Hourly' ? "nesta hora" : (filters.dataType.time === 'Daily' ? "neste dia" : (filters.dataType.time === 'Weekly' ? "nesta semana" : "neste mês"))}
+                    {numAreas > 1 && selectedArea !== "all" ? " na área: " + selectedArea : ""}
+                    {numAreas === 1 ? " na área: " + filters.area[0] : ""}
+                    {numAreas > 1 && selectedArea === "all" ? " nas áreas selecionadas" : ""}
+                    .
+                </div>
             </div>
         </Card>
     );

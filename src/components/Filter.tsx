@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { chartConfigPerArea, chartConfigPerDate } from '@/assets/util/AttachedData';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Calendar1, X, Squircle, ListFilter, Check, CircleCheck, CircleMinus, CircleDashed, Globe, ShieldAlert } from 'lucide-react';
+import { X, Squircle, ListFilter, Check, CircleCheck, CircleMinus, CircleDashed, Globe2, ShieldAlert, Info, ShieldAlertIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { useGlobals } from '@/Providers/globals';
+import { useGlobals } from '@/Providers/GlobalCtx';
 import AnexoI from '@/assets/AnexoI.json';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { useAlert } from '@/Providers/alerts';
+import { useAlert } from '@/Providers/Alert';
 
 type AggragateTypes = 'Total' | 'by Function' | 'by Area';
 type TimeAggragateTypes = 'Hourly' | 'Daily' | 'Weekly' | 'Monthly';
@@ -57,13 +57,29 @@ const Filters: React.FC<FilterProps> = ({ filters, setFilters, ...props }) => {
     const { showAlert } = useAlert();
     const mobileText = "text-l font-[400] font-lato ml-2 "
     const desktopText = "text-l font-[400] font-lato ml-4 "
+    const periodWithNotice: (className: string) => JSX.Element = (className: string) => {
+        return (
+            <div className={`${className} flex items-center gap-1 ml-0`}
+            style={{ marginLeft: '0px' }}>
+                <Info size={18}
+                    className='hover:cursor-pointer hover:text-blue-700 text-blue-500 dark:text-yellow-400'
+                    onClick={() => {
+                        showAlert(
+                            <div className='flex gap-2'><ShieldAlertIcon className='text-blue-500 dark:text-yellow-400' />Informação Sobre o Período</div>,
+                            <div>Como o sistema não esta conectado com um back-end própio, o período dos dados coletados reflete apartir da <i>última data disponível</i> e não do dia atual.</div>,
+                        );
+                    }}
+                /> <h1>Período</h1>
+            </div>
+        );
+    }
     return (
         <div {...props} >
             {/* Data Filters */}
             {
                 onMobile && <h1 className={mobileText}>Filtrar Dados</h1>
             }
-            <div className="gap-4 flex  items-center">
+            <div className="gap-x-4 gap-y-2 flex  items-center flex-wrap">
                 {
                     !onMobile && <h1 className={desktopText}>Filtrar Dados</h1>
                 }
@@ -182,7 +198,7 @@ const Filters: React.FC<FilterProps> = ({ filters, setFilters, ...props }) => {
                 </Popover>
             </div>
             {/* Data Type Filters */}
-             {onMobile && <h1 className={mobileText}>Agregar Dados</h1>}
+            {onMobile && <h1 className={mobileText}>Agregar Dados</h1>}
             <div className="gap-2 flex  items-center">
                 {!onMobile && <h1 className={desktopText}>Agregar Dados</h1>}
                 <Select value={filters.dataType.type} onValueChange={(value) => setFilters(prev => ({ ...prev, dataType: { ...prev.dataType, type: value as AggragateTypes } }))}>
@@ -227,21 +243,21 @@ const Filters: React.FC<FilterProps> = ({ filters, setFilters, ...props }) => {
                 </Select>
             </div>
             {/* Time Filters */}
-            {onMobile && <h1 className={mobileText}>Período</h1>}
+            {onMobile && periodWithNotice(desktopText)}
             <div className="flex gap-4 justify-between items-center">
-                {!onMobile && <h1 className={desktopText}>Período</h1>}
+                {!onMobile && periodWithNotice(mobileText)}
                 <ToggleGroup type="single" value={"" + filters.timeFrame} className=" border " aria-label="Theme Toggle"
                     onValueChange={(value) => {
                         if (value) setFilters((prev) => ({ ...prev, timeFrame: parseInt(value) }))
                     }}>
                     <ToggleGroupItem value={"1"} className='hover:cursor-pointer'
                     >24H</ToggleGroupItem>
-                    <ToggleGroupItem value={"7"} className='hover:cursor-pointer'
-                    >Sem</ToggleGroupItem>
+                    <ToggleGroupItem value={"15"} className='hover:cursor-pointer'
+                    >15d</ToggleGroupItem>
                     <ToggleGroupItem value={"30"} className='hover:cursor-pointer'
-                    ><Calendar1 /></ToggleGroupItem>
+                    >Mês</ToggleGroupItem>
                     <ToggleGroupItem value={"-1"} className='hover:cursor-pointer'
-                    ><Globe /></ToggleGroupItem>
+                    ><Globe2 /></ToggleGroupItem>
 
                 </ToggleGroup>
             </div>

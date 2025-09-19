@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis, LineChart, Line, BarChart, Bar, PieChart, Pie } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis, LineChart, Line, BarChart, Bar } from "recharts"
 
 import type { ChartConfig } from "@/components/ui/chart"
 import {
@@ -16,7 +16,6 @@ import {
     AreaChartIcon,
     BarChartIcon,
     ChartLineIcon,
-    PieChartIcon,
     Spline,
     GitCommitHorizontal
 
@@ -52,6 +51,8 @@ const genGrads = (name: string, color: string) => {
 const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline: boolean): React.JSX.Element => {
     // Improves legend and tooltip by filtering only the selected functions
     // Do the same for area when implementing pie chart
+    const Ydomain = <YAxis domain={[0, (dataMax: number) => Math.round(dataMax * 1.05)]} />;
+    const Legend = <ChartLegend content={<ChartLegendContent />}  className="flex-wrap gap-2  *:justify-center" />;
     if (type === "area") {
         return (
             <AreaChart
@@ -70,7 +71,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={[0, (dataMax:number) => Math.round(dataMax * 1.05)]} />
+                {Ydomain}
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                 <defs>
                     {
@@ -92,7 +93,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                         )
                     })
                 }
-                <ChartLegend content={<ChartLegendContent />} />
+                {Legend}
             </AreaChart>)
     }
 
@@ -114,7 +115,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={['0', (dataMax:number) => Math.round(dataMax * 1.05)]} />
+                {Ydomain}
                 {
                     Object.entries(chartConfig).map(([key, config]) => {
                         return (
@@ -132,8 +133,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     })
                 }
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-
-                <ChartLegend content={<ChartLegendContent />} />
+                {Legend}
             </LineChart>)
     }
 
@@ -155,7 +155,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={['0', (dataMax:number) => Math.round(dataMax * 1.05)]} />
+                {Ydomain}
                 {
                     Object.entries(chartConfig).map(([key, config]) => {
                         return (
@@ -170,32 +170,12 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                 }
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-                <ChartLegend content={<ChartLegendContent />} />
+                {Legend}
             </BarChart>
         )
     }
 
-    if (type === "pie") {
-        const pieData = [];
-        data.forEach(item => {
-            Object.entries(chartConfig).forEach(([key, config]) => {
-                pieData.push({
-                    name: config.label,
-                    value: item[key] || 0,
-                    fill: config.color
-                });
-            });
-        });
-        return (
-            <PieChart>
-                <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                />
-                <Pie data={data} dataKey="area" nameKey="browser" />
-            </PieChart>
-        )
-    }
+   // Should never reach here
     return <></>
 }
 
@@ -206,8 +186,8 @@ export default function MainChart({ data, chartConfig }: { data: ChartData[], ch
 
     return (
 
-        <div className="w-full h-full">
-            <div className="flex flex-row justify-between items-center px-4 mb-2">
+        <div className="w-full h-full  ">
+            <div className="flex flex-row justify-between items-center px-4 mb-2 ">
                 <ToggleGroup type="single" value={chartType} className=" border " aria-label="Chart Type Toggle"
                     onValueChange={(value) => {
                         if (value) setChartType(value)
@@ -218,8 +198,8 @@ export default function MainChart({ data, chartConfig }: { data: ChartData[], ch
                     ><ChartLineIcon /></ToggleGroupItem>
                     <ToggleGroupItem value="bar" className='hover:cursor-pointer'
                     ><BarChartIcon /></ToggleGroupItem>
-                    <ToggleGroupItem value="pie" className='hover:cursor-pointer'
-                    ><PieChartIcon /></ToggleGroupItem>
+                    {/* <ToggleGroupItem value="pie" className='hover:cursor-pointer'
+                    ><PieChartIcon /></ToggleGroupItem> */}
 
                 </ToggleGroup>
                 <ToggleGroup type="single" value={"" + useSpline} className={`border ${chartType == "area" || chartType == "line" ? "" : "hidden"}`} aria-label="Spline Toggle"
@@ -232,7 +212,7 @@ export default function MainChart({ data, chartConfig }: { data: ChartData[], ch
                     ><GitCommitHorizontal /></ToggleGroupItem>
                 </ToggleGroup>
             </div>
-            <ChartContainer config={chartConfig}>
+            <ChartContainer config={chartConfig} >
                 {genChart(chartType, data, chartConfig, useSpline)}
             </ChartContainer>
 

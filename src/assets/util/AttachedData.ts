@@ -115,7 +115,7 @@ export const chartConfigPerArea = {
 export const chartConfigTotal = 
 {
     Total: {
-        label: "Total",
+        label: "Total de Funcionários",
         color: "var(--chart-1)",
     },
 }

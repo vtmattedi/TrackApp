@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ThemeSelector from "@/components/ThemeSelector";
 
 import { ShieldOff } from "lucide-react";
-import { useGlobals } from "@/Providers/globals";
-import { useAlert } from "@/Providers/alerts";
+import { useGlobals } from "@/Providers/GlobalCtx";
+import { useAlert } from "@/Providers/Alert";
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

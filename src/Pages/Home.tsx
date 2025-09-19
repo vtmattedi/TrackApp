@@ -1,21 +1,18 @@
 import React from 'react';
-import Chart, { type ChartData } from '../chart';
+import Chart, { type ChartData } from '../components/MainChart';
 import { Card, CardHeader } from '@/components/ui/card';
-import { useGlobals } from '@/Providers/globals';
+import { useGlobals } from '@/Providers/GlobalCtx';
 import { getDataPerDate, chartConfigPerDate, chartConfigPerArea, chartConfigTotal } from '@/assets/util/AttachedData';
 // import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import {  ListFilter, TrendingUp, CircleSlash2} from 'lucide-react';
+import { ListFilter, TrendingUp, CircleSlash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import InfoCard from '@/components/infoCard';
+import InfoCard from '@/components/InforCard';
 import Filters, {
     type FilterType, availableAreas, availableFunctions, avilableAggragates, avilableTimes
-} from '../components/filters';
+} from '../components/Filter';
 import PieCard from '@/components/PieCard';
 import type { ChartConfig } from '@/components/ui/chart';
-
-
-
 
 const Home: React.FC = () => {
     const { onMobile } = useGlobals();
@@ -130,8 +127,8 @@ const Home: React.FC = () => {
         return res;
     }
     const getDataTypeLabel = () => {
-        const res = { type: '' , time: ''};
-        res.time = Object.entries(avilableTimes).find(([k, _]) =>  k === filters.dataType.time)?.[1]  || res.time;
+        const res = { type: '', time: '' };
+        res.time = Object.entries(avilableTimes).find(([k, _]) => k === filters.dataType.time)?.[1] || res.time;
         res.type = Object.entries(avilableAggragates).find(([k, _]) => k === filters.dataType.type)?.[1] || res.type;
         return res
     }
@@ -143,9 +140,7 @@ const Home: React.FC = () => {
                     position: 'sticky',
                     zIndex: 999,
 
-                }}
-
-            >
+                }}>
                 {
                     onMobile ? (
                         <Popover>
@@ -163,24 +158,30 @@ const Home: React.FC = () => {
                                 <Filters filters={filters} setFilters={setFilters} className='flex flex-col gap-4 w-full justify-between' />
                             </PopoverContent>
                         </Popover>
-                    ) : <Filters filters={filters} setFilters={setFilters} className='flex w-full justify-between p-1' />
+                    ) : <Filters filters={filters} setFilters={setFilters} className='flex w-full justify-between p-1' 
+                    />
 
                 }
             </div>
             {/* Chart Section */}
-            <div className='w-[100vw] h-[calc(100vh-64px-52px)] flex justify-center items-flex-start p-4'
+            <div className='w-[100vw] h-[calc(100vh-64px-52px)] flex justify-center items-flex-start px-4 mt-1'
                 style={{
                     flexDirection: onMobile ? 'column' : 'row',
                     justifyContent: onMobile ? 'flex-start' : 'center',
+                     padding: onMobile ? '0' : undefined,
+                    marginTop: '0.25rem',
+                    marginLeft: onMobile ? 'auto' : undefined,
+                    marginRight: onMobile ? 'auto' : undefined,
                     overflowY: 'auto',
+                    width: onMobile ? '98vw' : undefined,
                 }}
             >
                 {/* Main Chart */}
-                <div className='min-w-[400px] size-full h-full'
+                <div className='h-full '
                     style={{
-                        minHeight: onMobile ? '485px' : '500px',
-                        height: '100%',
-                    }}>
+                        minWidth: onMobile ? undefined : '650px',
+                    }}
+                    >
                     <Card className='w-full h-full'>
                         <CardHeader className='font-lato'>
                             <div className='flex flex-col p-0'>
@@ -194,15 +195,33 @@ const Home: React.FC = () => {
                     </Card>
                 </div>
                 {/* Side Info - Pie Chart and Averages */}
-                <div className='flex gap-2 flex-col ml-2 w-full'>
-                    <div className='flex flex-row gap-2 '>
+                <div className='flex gap-2 flex-col w-full '
+                    style={{
+                        //prob want extra space at the bottom cuz modern phones have a bottom bar that covers content
+                        marginBottom: onMobile ? '5rem' : '0', 
+                    }}
+                >
+                    <div className='flex flex-row '
+                        style={{
+                            marginLeft: onMobile ? '0' : '1rem',
+                            marginTop: onMobile ? '0.5rem' : '0',
+                            gap: onMobile ? '0.25rem' : '1rem',
+                        }}
+
+                    >
                         <InfoCard
+                            style={{
+                                width: onMobile ? '50%' : undefined,
+                            }}
                             cardTitle={<><CircleSlash2 /> Média</>}
                             number={getFilteredAvg()}
                             unit={`de funcionários ${getDataTypeLabel().time.toLowerCase()}`}
                             description={(filters.timeFrame === -1 ? 'Todos os dias' : 'Nos últimos ' + filters.timeFrame + ' dias') + "."}
                         />
                         <InfoCard
+                            style={{
+                                width: onMobile ? '50%' : undefined,
+                            }}
                             cardTitle={<><TrendingUp /> Pico</>}
                             number={getFilteredMax().value}
                             unit={`de funcionários em um${['Weekly', 'Hourly'].includes(filters.dataType.time) ? 'a' : ''} ${filters.dataType.time == 'Daily' ? 'dia' : filters.dataType.time == 'Weekly' ? 'semana' : filters.dataType.time == 'Monthly' ? 'mês' : 'hora'}`}
@@ -215,9 +234,6 @@ const Home: React.FC = () => {
                         filters={filters}
                     />
                 </div>
-
-
-
             </div >
 
         </>
