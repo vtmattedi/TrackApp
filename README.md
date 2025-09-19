@@ -121,16 +121,21 @@ Além disso, com o crescimento da aplicação seria interessante implementar alg
 Introduzir estas mudanças no começo do desenvolvimento facilita-rá bastante o desenvolvimento caso tais caracteristicas sejam desejadas ou necessárias com o aumento da complexidade do aplicativo.
 
 ##### SSR/SSG/CRS
+
 Como esta aplicação é algo amplamente dinamico, precisamos de bastante coisa gerada no *client-side* além disso, não teriamos muitas vantgens nas páginas serem geradas no *server-side* pois ela estaria protegida por autenticação, não tendo impacto no SEO, desta forma não teria muitas vantagens utilzar tecnicas de SSR/SSG, entretanto, ***caso fosse desejado***, poderiamos gerar uma landing page separadamente, otimizando o SEO, e utilizar um subdominio para o aplicativo i.e. trackapp.com -> landing page app.trackapp.com -> aplicativo. 
 
 ##### Análise de Dados
+
 Na parte de analise de dados, a depender o tamanho do data-set utilizado, poderiamos utilizar o indexDB para manter uma cópia do banco dados localmente e utilizar um *service-worker* para manter ele atualizado no background, diminuindo o tempo de requisição do banco de dados.
 Além disso, eu implementaria a possibilidade de escolher um range especifico de dias (ou granulado à horas caso tenha acesso a tais dados) tanto de começo quanto de final podendo análisar periodos especificos de dias.
 
 ##### UI
+
 Na parte de UI, teria mais atenção à escolha da palheta, especialmente para o tema claro e implementaria mais coisas ainda como variaveis css ao inves de hardcode, possibilitanto facilmente a manutenabilidade e coesão.
 Além disso, com mais tempo faria melhorias as visualizações das *labels* dis gráficos.
 
 ##### UX
-Para a UX, eu implementaria a interação com cliques no gráfico e seleção de range segurando o mouse diretamente no grádico, além disso, como teriamos dados dinamicos, seria interessante adicionar *skeleton-loaders* para os componentes que precisam desses dados. 
+
+Para a UX, eu implementaria a interação com cliques no gráfico e seleção de range segurando o mouse diretamente no grádico, além disso, como teriamos dados dinamicos, seria interessante adicionar *skeleton-loaders* para os componentes que precisam desses dados.
+Além disso, eu finalizaria a adequeção de acessibilidade terminando de popular as *aria-label* e *aria-role* nos lugares nescessarios.
 
