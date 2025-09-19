@@ -13,7 +13,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const { showAlert } = useAlert();
-    const { setUser, onMobile } = useGlobals();
+    const { setUser, onMobile, theme } = useGlobals();
     const navigate = useNavigate();
     // const TrackFyLogo = {
     //     inverted: 'https://trackfyapp.com.br/images/logo/logo-cor-2.svg',
@@ -50,7 +50,11 @@ const Login: React.FC = () => {
         <div className="flex min-h-screen items-center justify-center bg-blue-900 w-[100vw] dark:bg-gray-900"
 
             style={{
-                background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/bg01.webp)',
+                background: `
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                linear-gradient(to top, rgba(30, 58, 138, 0.7), rgba(30, 58, 138, 0)),
+                url(/bg01.webp)
+                `,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 flexDirection: onMobile ? 'column' : 'row',
@@ -59,9 +63,9 @@ const Login: React.FC = () => {
         >
             {
                 !onMobile ? (
-                    <div className="max-w-[80vw] w-[100%] min-h-screen pt-0 bg-gradient-to-t from-blue-900/50 to-blue-900/0  backdrop-blur-[2px] h-[100vh] ">
+                    <div className="max-w-[80vw] w-[100%] min-h-screen pt-0   backdrop-blur-[2px] h-[100vh] ">
 
-                        <div className="text-center mb-8 px-4 flex flex-col justify-center border h-[100%]">
+                        <div className="text-center mb-8 px-4 flex flex-col justify-center h-[100%]">
                             <h1 className="text-4xl  mb-4 text-center font-lato font-[300] text-white"> Trackfy Dashboard App </h1>
                             <span className="text-white font-inter text-lg p-6 rounded-md ">Unindo a tecnologia e a criatividade para transformar dados em insights valiosos.</span>
                         </div>
@@ -72,8 +76,9 @@ const Login: React.FC = () => {
             }
             <Card className={onMobile ? "w-[90%]" : "w-full max-w-md shadow-lg min-h-screen  backdrop-blur-md justify-center"}>
                 <CardHeader >
-                    {onMobile && <h1 className="text-2xl  mb-4 text-center font-lato font-[300] "> Trackfy Dashboard App </h1>}
-                    <div className="flex justify-between items-center font-lato text-2xl">
+                    {/* {onMobile && <h1 className="text-2xl  mb-4 text-center font-lato font-[300] "> Trackfy Dashboard App </h1>} */}
+                    {<img className="w-64 mx-auto mb-2" src={theme === "dark" ? "https://trackfyapp.com.br/images/logo/logo-cor-2.svg" : "https://trackfyapp.com.br/images/logo/logo-trackfy.svg"} alt="Trackfy Logo" />}
+                    <div className="flex justify-between items-center font-lato text-xl mt-2">
                         <CardTitle>Login </CardTitle>
                         <ThemeSelector />
                     </div>
@@ -131,7 +136,7 @@ const Login: React.FC = () => {
                 </CardContent>
             </Card>
 
-        </div>
+        </div >
     );
 };
 
