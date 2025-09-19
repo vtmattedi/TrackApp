@@ -170,3 +170,13 @@ button {
   font-weight: 700;
   font-style: normal;
 }
+
+/* Manual Cursor Control */
+
+.setCursor .recharts-layer .recharts-pie-sector {
+  cursor: pointer;
+}
+
+.setCursor .recharts-area, .recharts-area{
+  cursor: pointer!important;
+}

@@ -16,6 +16,8 @@ import type { ChartConfig } from '@/components/ui/chart';
 
 const Home: React.FC = () => {
     const { onMobile } = useGlobals();
+    // Sync click from mainchart to pie chart
+    const [periodSelected, setPeriodSelected] = React.useState<string | undefined>(undefined);
     const baseData = getDataPerDate();
     // Get the most recent date from the data
     const maxDate = new Date(Math.max(...baseData.map(o => new Date(o.date).getTime())));
@@ -181,8 +183,7 @@ const Home: React.FC = () => {
                     <Card className='h-full '
                         style={{
                             minHeight: onMobile ? undefined : '733px',
-                        }}
-                    >
+                        }}>
                         <CardHeader className='font-lato'>
                             <div className='flex flex-col p-0'>
                                 <div className='font-lato text-3xl'>Quantidade de funcionarios {getDataTypeLabel().time.toLowerCase()}</div>
@@ -195,7 +196,7 @@ const Home: React.FC = () => {
                             maxWidth: onMobile ? '1000px' : undefined,
                             margin: '0 auto',
                         }} className='w-full'>
-                            <Chart data={getFilteredData()} chartConfig={filterChartConfig()} />
+                            <Chart data={getFilteredData()} chartConfig={filterChartConfig()} periodChange={setPeriodSelected} />
                         </div>
                     </Card>
                 </div>
@@ -241,7 +242,9 @@ const Home: React.FC = () => {
                     >
 
                         <PieCard
-                            filters={filters} />
+                            filters={filters}
+                            periodSelected={periodSelected}
+                            />
                     </div>
                 </div>
             </div >

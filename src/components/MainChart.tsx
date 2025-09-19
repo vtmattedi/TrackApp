@@ -48,11 +48,19 @@ const genGrads = (name: string, color: string) => {
 }
 
 // Function to generate chart based on type
-const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline: boolean): React.JSX.Element => {
+const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline: boolean, periodChange?: (newPeriod: string) => void): React.JSX.Element => {
     // Improves legend and tooltip by filtering only the selected functions
     // Do the same for area when implementing pie chart
     const Ydomain = <YAxis domain={[0, (dataMax: number) => Math.round(dataMax * 1.05)]} />;
-    const Legend = <ChartLegend content={<ChartLegendContent />}  className="flex-wrap gap-2  *:justify-center" />;
+    const Legend = <ChartLegend content={<ChartLegendContent />} className="flex-wrap gap-2  *:justify-center" />;
+    const _onClick = (props:any) => {
+        console.log("Clicked", props);
+        if (!periodChange) return;
+        if (props && props.activeLabel) {
+            periodChange(props.activeLabel);
+        }
+    }
+    
     if (type === "area") {
         return (
             <AreaChart
@@ -61,6 +69,9 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                 margin={{
                     left: 6,
                     right: 6,
+                }}
+                onClick={(props) => {
+                   _onClick(props);
                 }}
             >
                 <CartesianGrid vertical={true} />
@@ -106,6 +117,9 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     left: 12,
                     right: 12,
                 }}
+                 onClick={(props) => {
+                   _onClick(props);
+                }}
             >
                 <CartesianGrid vertical={true} />
                 <XAxis
@@ -146,6 +160,9 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     left: 12,
                     right: 12,
                 }}
+                 onClick={(props) => {
+                   _onClick(props);
+                }}
             >
                 <CartesianGrid vertical={true} />
                 <XAxis
@@ -175,11 +192,11 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
         )
     }
 
-   // Should never reach here
+    // Should never reach here
     return <></>
 }
 
-export default function MainChart({ data, chartConfig }: { data: ChartData[], chartConfig: ChartConfig }) {
+export default function MainChart({ data, chartConfig, periodChange }: { data: ChartData[], chartConfig: ChartConfig, periodChange?: (newPeriod: string) => void }) {
 
     const [chartType, setChartType] = React.useState("area");
     const [useSpline, setUseSpline] = React.useState(true);
@@ -212,8 +229,8 @@ export default function MainChart({ data, chartConfig }: { data: ChartData[], ch
                     ><GitCommitHorizontal /></ToggleGroupItem>
                 </ToggleGroup>
             </div>
-            <ChartContainer config={chartConfig} >
-                {genChart(chartType, data, chartConfig, useSpline)}
+            <ChartContainer config={chartConfig}  className="setCursor">
+                {genChart(chartType, data, chartConfig, useSpline, periodChange)}
             </ChartContainer>
 
         </div>

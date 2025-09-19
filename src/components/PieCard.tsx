@@ -16,9 +16,10 @@ import { useGlobals } from '@/Providers/Globals';
 import CountUp from './CountUp';
 interface PieCardProps extends React.ComponentProps<"div"> {
     filters: FilterType;
+    periodSelected?: string;
 }
 
-const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
+const PieCard: React.FC<PieCardProps> = ({ filters, periodSelected, ...props }) => {
     const baseData = getDataPerDate();
     const filterClassProps = { ...props };
     delete filterClassProps.className; // Remove className to avoid passing it twice
@@ -191,7 +192,15 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     React.useEffect(() => {
         numAreas === 1 && setSelectedArea(filters.area[0]);
     }, [selectedArea]);
-
+    //Externally controlled period change
+    React.useEffect(() => {
+        if (periodSelected) {
+            const index = dateOptions.indexOf(periodSelected);
+            if (index !== -1) {
+                setSelectedDateIndex(index);
+            }
+        }
+    }, [periodSelected]);
     return (
         <Card className={`gap-0 ${props.className}`} {...filterClassProps}
             style={{
@@ -226,10 +235,19 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                     </div>
                 }
             </div>
-            <div className='my-2 h-[300px] w-full flex justify-center items-center'>
+            <div className={`my-2 h-[300px] w-full flex justify-center items-center ${selectedArea === "all" ? "setCursor" : ""} `}>
                 <ChartContainer config={getFilteredChartConfig()}
-                    className="[&_.recharts-pie-label-text]:fill-foreground [&_.recharts-pie-label-text]:break-words [&_.recharts-pie-label-text]:text-wrap mx-auto aspect-square max-h-[300px] pb-0 w-full">
-                    <PieChart>
+                    className="[&_.recharts-pie-label-text]:fill-foreground [&_.recharts-pie-label-text]:break-words [&_.recharts-pie-label-text]:text-wrap mx-auto aspect-square max-h-[300px] pb-0 w-full hover:pointer">
+                    <PieChart
+                        onClick={(props) =>  {
+                            console.log("Clicked", props);
+                            if (!props?.activePayload || props.activePayload.length === 0) return;
+                            const name = props?.activePayload[0].payload.name || "";
+                            if (selectedArea === "all") {
+                                setSelectedArea(name);
+                            }
+                        }}
+                    >
                         <ChartTooltip
                             content={<ChartTooltipContent />}
                         />
