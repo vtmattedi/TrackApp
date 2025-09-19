@@ -72,7 +72,7 @@ const Login: React.FC = () => {
             }
             <Card className={onMobile ? "w-[90%]" : "w-full max-w-md shadow-lg min-h-screen  backdrop-blur-md justify-center"}>
                 <CardHeader >
-                    {onMobile && <h1 className="text-2xl  mb-4 text-center font-lato font-[300] text-white"> Trackfy Dashboard App </h1>}
+                    {onMobile && <h1 className="text-2xl  mb-4 text-center font-lato font-[300] "> Trackfy Dashboard App </h1>}
                     <div className="flex justify-between items-center font-lato text-2xl">
                         <CardTitle>Login </CardTitle>
                         <ThemeSelector />
