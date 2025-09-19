@@ -29,6 +29,7 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
     const { onMobile } = useGlobals();
     // Component re-renders when filters change so we can use simple functions to get filtered data
 
+    // Data layout change between showing data for a single area or multiple areas
     const getFilteredData: () => any[] = () => {
         // If no areas selected, return empty data
         if (numAreas === 0) return [];
@@ -297,7 +298,8 @@ const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
                     .
                 </div>
             </div>
-        </Card>
+            
+        </Card >
     );
 };
 
