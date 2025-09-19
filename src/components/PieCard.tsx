@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from './ui/card';
-import { chartConfigPerArea, chartConfigPerDate, getDataPerArea, getDataPerDate, type DataPerDate } from '@/assets/util/AttachedData';
+import { chartConfigPerArea, chartConfigPerDate, getDataPerDate } from '@/assets/util/AttachedData';
 import {
     ChartContainer,
     ChartTooltip,
@@ -16,7 +16,6 @@ interface PieCardProps extends React.ComponentProps<"div"> {
 }
 
 const PieCard: React.FC<PieCardProps> = ({ filters, ...props }) => {
-    const baseAreaData = getDataPerArea();
     const baseData = getDataPerDate();
     const filterClassProps = { ...props };
     delete filterClassProps.className; // Remove className to avoid passing it twice

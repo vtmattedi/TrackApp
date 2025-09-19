@@ -70,7 +70,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={[0, 'dataMax + 20']} />
+                <YAxis domain={[0, (dataMax:number) => Math.round(dataMax * 1.05)]} />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                 <defs>
                     {
@@ -114,7 +114,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={[0, 'dataMax + 5']} />
+                <YAxis domain={['0', (dataMax:number) => Math.round(dataMax * 1.05)]} />
                 {
                     Object.entries(chartConfig).map(([key, config]) => {
                         return (
@@ -155,7 +155,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={[0, 'dataMax*1.1']} />
+                <YAxis domain={['0', (dataMax:number) => Math.round(dataMax * 1.05)]} />
                 {
                     Object.entries(chartConfig).map(([key, config]) => {
                         return (

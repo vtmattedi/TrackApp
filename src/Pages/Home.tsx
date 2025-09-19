@@ -3,14 +3,11 @@ import Chart, { type ChartData } from '../chart';
 import { Card, CardHeader } from '@/components/ui/card';
 import { useGlobals } from '@/Providers/globals';
 import { getDataPerDate, chartConfigPerDate, chartConfigPerArea, chartConfigTotal } from '@/assets/util/AttachedData';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Calendar1, X, Squircle, ListFilter, Check, TrendingUp, CircleSlash2, TimerReset, CircleCheck, CircleMinus, CircleDashed, Globe2, Globe } from 'lucide-react';
+// import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import {  ListFilter, TrendingUp, CircleSlash2} from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { ChartPieDonutText } from '@/components/pieChart';
 import InfoCard from '@/components/infoCard';
-import AnexoI from '@/assets/AnexoI.json';
-import { Label } from 'recharts';
 import Filters, {
     type FilterType, availableAreas, availableFunctions, avilableAggragates, avilableTimes
 } from '../components/filters';
@@ -89,7 +86,7 @@ const Home: React.FC = () => {
     const filterChartConfig: () => ChartConfig = () => {
         let _config = {} as ChartConfig;
         if (filters.dataType.type === 'by Area') {
-            _config = Object.fromEntries(Object.entries(chartConfigPerArea).filter(([key, value]) => filters.area.includes(value.label)));
+            _config = Object.fromEntries(Object.entries(chartConfigPerArea).filter(([_, value]) => filters.area.includes(value.label)));
         }
         else if (filters.dataType.type === 'by Function') {
             _config = Object.fromEntries(Object.entries(chartConfigPerDate).filter(([key, _]) => filters.function.includes(key)));
@@ -134,8 +131,8 @@ const Home: React.FC = () => {
     }
     const getDataTypeLabel = () => {
         const res = { type: '' , time: ''};
-        res.time = Object.entries(avilableTimes).find(([k, v]) =>  k === filters.dataType.time)?.[1]  || res.time;
-        res.type = Object.entries(avilableAggragates).find(([k, v]) => k === filters.dataType.type)?.[1] || res.type;
+        res.time = Object.entries(avilableTimes).find(([k, _]) =>  k === filters.dataType.time)?.[1]  || res.time;
+        res.type = Object.entries(avilableAggragates).find(([k, _]) => k === filters.dataType.type)?.[1] || res.type;
         return res
     }
     return (
