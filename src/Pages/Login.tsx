@@ -66,8 +66,7 @@ const Login: React.FC = () => {
                     <div className="max-w-[80vw] w-[100%] min-h-screen pt-0   backdrop-blur-[2px] h-[100vh] ">
 
                         <div className="text-center mb-8 px-4 flex flex-col justify-center h-[100%]">
-                            <h1 className="text-4xl  mb-4 text-center font-lato font-[300] text-white"> Trackfy Dashboard App </h1>
-                            <span className="text-white font-inter text-lg p-6 rounded-md ">Unindo a tecnologia e a criatividade para transformar dados em insights valiosos.</span>
+                        
                         </div>
                     </div>
                 )
