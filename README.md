@@ -22,12 +22,14 @@ Improvments:
 - ux: click on label, skeleton
 
 
-<h1 align="center" style="font-weight: Bold">:desktop_computer: Projeto Track App. </h1>
+<h1 align="center" style="font-weight: Bold">:desktop_computer: Projeto Track App </h1>
 
-Este Projeto é um aplicativo web para vizualição de dados 
+Este Projeto é um aplicativo web para vizualição de dados 📈, neste caso estamos utilizando os dados em [Anexo](/src/assets)
 
 * [Projeto](#projeto)
-* [Como instalar](#instalando-o-aplicativo)
+* [Instalação](#instalando-o-aplicativo)
+* [Escolhas Tecnicas]
+* [Teste & Uso]
 * [Como configurar](#configurando-o-environment)
 * [Como executar](#executando-o-aplicativo)
 * [Testando](#testando-o-aplicativo)
@@ -44,21 +46,23 @@ Para utilizar esta aplicação é nescessario ter instalado:
    * Localmente: [vendor](https://www.postgresql.org/download).
    * ou uma solução online como [neon](https://neon.com/).
 
-### Instalando o aplicativo.
+### Instalando & Rodando o aplicativo.
 
 Uma vez que os pre-requistos estejam instalados, para instalar esta aplicação:
 
 1. Clone este repositorio:
 
 ```Bash
-git clone https://github.com/vtmattedi/TodoProject
+git clone https://github.com/vtmattedi/TrackApp
 ```
 
 2. Abra a pasta
 
 ```Bash
-    cd folder
+    cd <folder>
 ```
+
+>[!WARNING] Npm recentemente teve o chain-supply infectado, recomenda-se testar em ambiente controlado.
 
 3. Instale as dependencias:
 
@@ -66,15 +70,10 @@ git clone https://github.com/vtmattedi/TodoProject
     npm install
 ```
 
-Caso não tenha o NestJS cli instalado globalmente, é recomendado utilizar:
-
+4. Rodar em ambiente de desenvolvimento
 ```Bash
-    npm install -g @nestjs/cli
+    npm run dev
 ```
-4. Tenha acesso a um banco de dados PostgreSQL.
-
-5. Além disso é nescessario que o banco de dados esteja funcionando e que as credenciaias estejam no arquivo `.env`.
-
 #### Configurando o Environment
 
 Para a aplicação funcionar corretamente, é nescessario criar o arquivo `.env` como o arquivo [exemplo](.example.env).
