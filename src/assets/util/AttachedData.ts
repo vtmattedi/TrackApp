@@ -4,24 +4,28 @@ import AnexoI from '../AnexoI.json';
 import type { ChartConfig } from "@/components/ui/chart";
 const chartData = AnexoII.dadosPessoas as { data: string, funcao: string, quantidade: number, area: string }[];
 
-interface DataPerDate {
+export interface DataPerDate {
     date: string;
-    values: { [key: string]: { value: number, area: string } }[];
+    values: {
+        function: string,
+        value: number;
+        area: string;
+    }[];
 }
 // Get data grouped by date
 export const getDataPerDate = () => {
     const myData: DataPerDate[] = [];
     chartData.forEach(item => {
-        const key = item.funcao.toLowerCase().replaceAll('â', 'a'); // normalize keys
+        const func = item.funcao.toLowerCase().replaceAll('â', 'a'); // normalize keys
         // Mecânico has problems with â character
         // Investigate global normalization solution later
         const existing = myData.find(d => d.date === item.data);
         if (existing) {
-            existing.values.push({ [key]: { value: item.quantidade, area: item.area } });
+            existing.values.push({ function: func, value: item.quantidade, area: item.area });
         } else {
             myData.push({
                 date: item.data,
-                values: [{ [key]: { value: item.quantidade, area: item.area } }],
+                values: [{ function: func, value: item.quantidade, area: item.area }],
             });
         }
     });
@@ -44,7 +48,7 @@ export const getDataPerArea = () => {
             if (itemDate) {
                 itemDate[key] = item.quantidade;
             } else {
-                existing.values.push({date: item.data, [key]: item.quantidade});
+                existing.values.push({ date: item.data, [key]: item.quantidade });
             }
         } else {
             const key = item.funcao.toLowerCase().replaceAll('â', 'a'); // normalize keys
@@ -87,26 +91,34 @@ export const chartConfigPerDate = {
 export const chartConfigPerArea = {
     oficina_central: {
         label: "Oficina Central",
-        color: "var(--chart-1)",
+        color: "var(--chart-6)",
     },
     galpao_xyz: {
         label: "Galpão XYZ",
-        color: "var(--chart-2)",
+        color: "var(--chart-7)",
     },
     gaveteiro_de_andaimes: {
         label: "Gaveteiro de Andaimes",
-        color: "var(--chart-3)",
+        color: "var(--chart-8)",
     },
     bomba_178: {
         label: "Bomba 178",
-        color: "var(--chart-4)",
+        color: "var(--chart-9)",
     },
     tanques: {
         label: "Tanques",
-        color: "var(--chart-5)",
+        color: "var(--chart-10)",
     },
 
 } satisfies ChartConfig
+
+export const chartConfigTotal = 
+{
+    Total: {
+        label: "Total",
+        color: "var(--chart-1)",
+    },
+}
 
 export const getAvgPositions = () => {
     const positions = AnexoI.areas as { nome: string, tipo: string, latitude: number, longitude: number }[];

@@ -21,7 +21,7 @@ import { useGlobals } from '@/Providers/globals';
 const Header: React.FC = () => {
     const [popoverOpen, setPopoverOpen] = React.useState(false);
     const [sheetOpen, setSheetOpen] = React.useState(false);
-    const pagesClass = "text-gray-800 dark:text-gray-200 hover:cursor-pointer hover:underline hover:underline-offset-4 p-4 flex items-center gap-2 text-lg font-medium";
+    const pagesClass = "text-[var(--color-accent-trackfy)] dark:text-white hover:text-[var(--color-accent-trackfy-hover)] dark:hover:text-gray-300 hover:cursor-pointer hover:underline hover:underline-offset-4 p-4 flex items-center gap-2 text-lg font-medium";
     const getPlanColor = (plan: string | undefined) => {
         switch (plan?.toLowerCase()) {
             case 'bronze':
@@ -56,8 +56,9 @@ const Header: React.FC = () => {
                 position: 'sticky',
                 top: 0,
                 zIndex: 9999,
+                backdropFilter: 'saturate(180%) blur(20px)',
             }}
-        className="bg-gray-200 dark:bg-gray-800 w-full  flex justify-between items-center position-sticky top-0 z-999 shadow-md w-full h-[64px]" >
+        className="bg-[var(--header-bg)] w-full  flex justify-between items-center position-sticky top-0 z-999 shadow-md w-full h-[64px]" >
             <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                 <PopoverAnchor asChild>
                     <div className="flex items-center  hover:bg-gray-700 hover:cursor-pointer p-4 border-round h-full"
@@ -123,7 +124,7 @@ const Header: React.FC = () => {
                                 <Menu />
                             </div>
                         </SheetTrigger>
-                        <SheetContent className='z-9999 bg-gray-200 dark:bg-gray-800' side='right'
+                        <SheetContent className='z-9999 bg-[var(--header-bg)]' side='right'
                             style={{
                                 transition: 'transform 0.3s ease-in-out',
                             }}

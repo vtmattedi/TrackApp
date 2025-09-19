@@ -79,11 +79,9 @@ const InnerMap: React.FC = () => {
     return (
 
         <>
-
             <TileLayer
                 url={view.url}
             />
-
             {/* Controls, position must be absolute */}
             <div
                 style={{
@@ -278,7 +276,7 @@ const InnerMap: React.FC = () => {
                                                                             y={(viewBox.cy || 0) + 24}
                                                                             className="fill-muted-foreground font-lato text-sm"
                                                                         >
-                                                                            Operadores
+                                                                            Funcionarios
                                                                         </tspan>
                                                                     </text>
                                                                 )

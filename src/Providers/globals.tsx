@@ -76,7 +76,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         }
         // add event listener to track window resize and set onMobile accordingly
         const handleResize = () => {
-            setOnMobile(window.innerWidth < 768);
+            setOnMobile(window.innerWidth < 1000);// 1000px breakpoint for the filter bar
         };
         window.addEventListener('resize', handleResize);
         handleResize(); // Initial check

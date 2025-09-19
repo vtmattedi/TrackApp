@@ -23,7 +23,7 @@ import {
 } from "lucide-react"
 export type ChartData = {
 
-    data: string;
+    date: string;
     caldeireiro: number;
     eletricista: number;
     mecanico: number;
@@ -64,7 +64,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
             >
                 <CartesianGrid vertical={true} />
                 <XAxis
-                    dataKey="data"
+                    dataKey="date"
                     tickLine={true}
                     axisLine={true}
                     tickMargin={2}
@@ -108,7 +108,7 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
             >
                 <CartesianGrid vertical={true} />
                 <XAxis
-                    dataKey="data"
+                    dataKey="date"
                     tickLine={true}
                     axisLine={true}
                     tickMargin={2}
@@ -149,13 +149,13 @@ const genChart = (type: string, data: any[], chartConfig: ChartConfig, useSpline
             >
                 <CartesianGrid vertical={true} />
                 <XAxis
-                    dataKey="data"
+                    dataKey="date"
                     tickLine={true}
                     axisLine={true}
                     tickMargin={2}
                     tickCount={30}
                 />
-                <YAxis domain={[0, 'dataMax + 5']} />
+                <YAxis domain={[0, 'dataMax*1.1']} />
                 {
                     Object.entries(chartConfig).map(([key, config]) => {
                         return (
@@ -206,7 +206,7 @@ export default function MainChart({ data, chartConfig }: { data: ChartData[], ch
 
     return (
 
-        <div className=" ">
+        <div className="w-full h-full">
             <div className="flex flex-row justify-between items-center px-4 mb-2">
                 <ToggleGroup type="single" value={chartType} className=" border " aria-label="Chart Type Toggle"
                     onValueChange={(value) => {
