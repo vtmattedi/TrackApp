@@ -45,7 +45,7 @@ const viewOptions: IViewOption[] = [
     {
         value: 'satellite',
         label: 'Satélite',
-        url: 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.png',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     },
     {
         value: 'streets',
