@@ -65,6 +65,7 @@ Além disso, foram utilizadas, principalmente, as seguintes `packages`:
 * Leaflet: Blibioteca para a visualização de mapas.
 * Reacut-Router-Dom: Blibioteca para orgainazação de páginas e rotas.
   Estas blibiotecas foram escolhidas pois, novamente, já são consolidadas e todas tem licença de uso MIT ou APU.
+* Lucide: Blibioteca para icones e SVG's
 
 Além disso foram implementados os temas claros e escuro e o design é resposivél garantindo uma boa UX não só na versão desktop.
 
